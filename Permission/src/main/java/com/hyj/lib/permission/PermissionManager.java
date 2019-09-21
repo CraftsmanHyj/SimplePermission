@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
 import com.hyj.lib.permission.annotation.IPermission;
+import com.hyj.lib.permission.bean.IPermissionInfo;
 import com.hyj.lib.permission.callback.PermissionCallback;
 import com.hyj.lib.permission.helper.PermissionHelper;
 
@@ -61,24 +62,23 @@ public class PermissionManager {
     /**
      * 申请一个动态权限
      *
-     * @param activity    上下文对象
-     * @param callback    权限处理结果回调
-     * @param requestCode 权限请求码
-     * @param perms       所需要的权限
+     * @param activity 上下文对象
+     * @param callback 权限处理结果回调
+     * @param permInfo 权限请求信息
      */
     public static void requestPermissions(@NonNull Activity activity,
                                           @NonNull PermissionCallback callback,
-                                          int requestCode, @NonNull String... perms) {
-        mCallBack.put(generateCallBackKey(activity, requestCode), callback);
+                                          IPermissionInfo permInfo) {
+        mCallBack.put(generateCallBackKey(activity, permInfo.getRequestCode()), callback);
 
         //发起请求之前，还要做一次检查
-        if (hasPermissions(activity, perms)) {  //全部通过
-            notifyHasPermissions(activity, requestCode, perms);
+        if (hasPermissions(activity, permInfo.getPermissions())) {  //全部通过
+            notifyHasPermissions(activity, permInfo.getRequestCode(), permInfo.getPermissions());
             return;
         }
 
         //权限申请
-        PermissionHelper.newInstance(activity).requestPermissions(requestCode, perms);
+        PermissionHelper.newInstance(activity).requestPermissions(permInfo.getRequestCode(), permInfo.getPermissions());
         return;
     }
 
@@ -248,7 +248,7 @@ public class PermissionManager {
      * @param deniedPermissions 被拒绝的权限组
      * @return 如果有任一“不再询问”的权限返回true,反之false
      */
-    public static boolean somePermissionPermanetlyDenied(Activity activity, List<String> deniedPermissions) {
+    private static boolean somePermissionPermanetlyDenied(Activity activity, List<String> deniedPermissions) {
         return PermissionHelper.newInstance(activity).somePermissionPermanetlyDenied(deniedPermissions);
     }
 }

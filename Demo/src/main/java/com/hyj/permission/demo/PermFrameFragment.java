@@ -68,7 +68,7 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
             public String getPermissionSetMsg(int reqeustCode) {
                 return "frame fragment 扫码需要使用相机权限";
             }
-        }, PermsEnm.CAMER.getCode(), PermsEnm.CAMER.getPerms());
+        }, PermsEnm.CAMER);
     }
 
     /**
@@ -90,7 +90,7 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
             public String getPermissionSetMsg(int reqeustCode) {
                 return "frame fragment 使用位置、联系人权限，监听用户隐私啊";
             }
-        }, PermsEnm.LOCATION_CONTACTS.getCode(), PermsEnm.LOCATION_CONTACTS.getPerms());
+        }, PermsEnm.LOCATION_CONTACTS);
     }
 
     @Override
@@ -105,9 +105,9 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
         super.onActivityResult(requestCode, resultCode, data);
 
         //从应用权限设置页面返回，可以从这里获取到设置的结果
-        if (PermsEnm.CAMER.getCode() == requestCode) {
+        if (PermsEnm.CAMER.getRequestCode() == requestCode) {
             ToastUtils.showToast(getContext(), "frame fragment 相机权限 onActivityResult");
-        } else if (PermsEnm.LOCATION_CONTACTS.getCode() == requestCode) {
+        } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
             ToastUtils.showToast(getContext(), "frame fragment 位置、联系人权限 onActivityResult");
         }
     }

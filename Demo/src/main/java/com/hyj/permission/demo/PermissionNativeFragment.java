@@ -60,7 +60,7 @@ public class PermissionNativeFragment extends Fragment implements View.OnClickLi
     private void fragmentSimplePermission() {
         int flag = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA);
         if (flag != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(PermsEnm.CAMER.getPerms(), PermsEnm.CAMER.getCode());
+            requestPermissions(PermsEnm.CAMER.getPermissions(), PermsEnm.CAMER.getRequestCode());
         }
     }
 
@@ -70,7 +70,7 @@ public class PermissionNativeFragment extends Fragment implements View.OnClickLi
     private void fragmentMultiPermission() {
         int flag = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS);
         if (flag != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(PermsEnm.LOCATION_CONTACTS.getPerms(), PermsEnm.LOCATION_CONTACTS.getCode());
+            requestPermissions(PermsEnm.LOCATION_CONTACTS.getPermissions(), PermsEnm.LOCATION_CONTACTS.getRequestCode());
         }
     }
 
@@ -133,9 +133,9 @@ public class PermissionNativeFragment extends Fragment implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
 
         //从应用权限设置页面返回，可以从这里获取到设置的结果
-        if (PermsEnm.CAMER.getCode() == requestCode) {
+        if (PermsEnm.CAMER.getRequestCode() == requestCode) {
             ToastUtils.showToast(getContext(), "native fragment 相机权限 onActivityResult");
-        } else if (PermsEnm.LOCATION_CONTACTS.getCode() == requestCode) {
+        } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
             ToastUtils.showToast(getContext(), "native fragment 位置、联系人权限 onActivityResult");
         }
     }
