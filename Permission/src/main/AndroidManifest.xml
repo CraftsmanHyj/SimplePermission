@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hyj.lib.permission" />
+<manifest package="com.hyj.lib.permission" />

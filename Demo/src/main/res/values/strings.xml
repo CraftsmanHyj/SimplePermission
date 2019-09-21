@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SimplePermission</string>
+
+    <string name="multiPerm">位置、联系人</string>
+    <string name="singlePerm">相机</string>
+
+    <string name="activityPerm">Activity中动态申请权限</string>
+    <string name="simplePerm">使用SimplePermission框架请求权限</string>
+    <string name="originalPerm">Fragment中使用原生方式动态请求权限</string>
 </resources>
