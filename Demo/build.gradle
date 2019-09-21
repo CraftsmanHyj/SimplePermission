@@ -10,10 +10,25 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+
+    signingConfigs {
+        releaseSign {    //正式签名
+            storeFile file(STORE_FILE)
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+            storePassword STORE_PASSWORD
+        }
+    }
+
+    buildTypes { //构建的类型方式
         release {
-            minifyEnabled false
+            zipAlignEnabled true    // 开启ZipAlign优化
+            shrinkResources true    //移除无用的资源文件
+
+            minifyEnabled true  //编译时是否混淆
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            signingConfig signingConfigs.releaseSign     //签名信息
         }
     }
 }
