@@ -24,6 +24,13 @@ public enum PermsEnm implements IPermissionInfo {
         this.perms = perms;
     }
 
+    /**
+     * <pre>
+     *     不可以在此方法上直接调用PermConstant.getReqeustCode();
+     *     因为每次调用返回的reqeustCode是会自增的
+     * </pre>
+     * @return
+     */
     @Override
     public int getRequestCode() {
         return code;
