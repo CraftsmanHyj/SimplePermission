@@ -21,11 +21,11 @@ public class PermissionCallbackImpl<T> implements PermissionCallback {
     /**
      * {@link PermissionCallback}的简单实现
      *
-     * @param actFmg 必须是Activity或者android.support.v4.app.Fragment的子类
+     * @param actFmg 必须是 android.app.Activity 或者 android.support.v4.app.Fragment 的子类
      */
     public PermissionCallbackImpl(T actFmg) {
         if (!(actFmg instanceof Activity) && !(actFmg instanceof Fragment)) {
-            throw new IllegalArgumentException("argument must be instanceof Activity or android.support.v4.app.Fragment");
+            throw new IllegalArgumentException("argument must be instanceof android.app.Activity or android.support.v4.app.Fragment");
         }
 
         this.actFmgInstance = actFmg;
