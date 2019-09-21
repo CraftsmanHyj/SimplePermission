@@ -7,6 +7,8 @@
 
 支持拒绝后弹窗询问再次请求及提示语自定义；
 
+[下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
+
 
 
 # 添加依赖
