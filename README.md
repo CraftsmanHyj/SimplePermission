@@ -14,27 +14,27 @@
 **Step 1.** 在项目的根目录`build.gradle`文件中加入JitPack仓库
 
 ```groovy
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
 	}
+}
 ```
 
 **Step 2.** 在当前APP`Demo/build.gradle`文件中加入库的依赖
 
 ```groovy
-	dependencies {
-	        implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.1'
-	}
+dependencies {
+        implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.1'
+}
 ```
 
 
 
 # 使用示例
 
-**Step 1.**定义申请权限枚举类
+**Step 1.** 定义申请权限枚举类
 
 ```java
 public enum PermsEnm implements IPermissionInfo {
@@ -63,7 +63,7 @@ public enum PermsEnm implements IPermissionInfo {
 
 
 
-**Step 2.**执行申请逻辑
+**Step 2.** 执行申请逻辑
 
 ```java
 PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatActivity>(this) {
