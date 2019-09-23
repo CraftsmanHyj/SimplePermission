@@ -9,7 +9,7 @@
 
 [下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
-
+![](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
 # 添加依赖
 
