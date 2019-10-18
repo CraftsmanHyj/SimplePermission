@@ -67,6 +67,8 @@ public enum PermsEnm implements IPermissionInfo {
 
 **Step 2.** 执行申请逻辑
 
+**Activity**中使用方法：
+
 ```java
 PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatActivity>(this) {
     @Override
@@ -85,4 +87,27 @@ PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatA
     }
 }, PermsEnm.CAMER);
 ```
+
+**Fragment**中使用方法
+
+```java
+PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<Fragment>(this) {
+    @Override
+    public void onPermissionGranted(int reqeustCode, List<String> perms) {
+        ToastUtils.showToast(getContext(), "frame fragment 已经获取了相机权限");
+    }
+
+    @Override
+    public void onPermissionDenied(int reqeustCode, List<String> perms) {
+        ToastUtils.showToast(getContext(), "frame fragment 拒绝使用相机");
+    }
+
+    @Override
+    public String getPermissionSetMsg(int reqeustCode) {
+        return "frame fragment 扫码需要使用相机权限";
+    }
+}, PermsEnm.CAMER);
+```
+
+
 
