@@ -124,3 +124,23 @@ PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<F
 
 
 
+**Step 4.** 拒绝且不再提示逻辑处理
+
+当执行拒绝且不再提示的逻辑之后，会弹出再次询问，跳转到设置界面去设置权限的逻辑；结果接收处理
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    //从应用权限设置页面返回，可以从这里获取到设置的结果
+    if (PermsEnm.CAMER.getRequestCode() == requestCode) {
+        ToastUtils.showToast(this, "activity 相机权限 onActivityResult");
+    } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
+        ToastUtils.showToast(this, "activity 位置、联系人权限 onActivityResult");
+    }
+}
+```
+
+
+
