@@ -1,6 +1,4 @@
 # SimplePermission
-[![](https://jitpack.io/v/CraftsmanHyj/SimplePermission.svg)](https://jitpack.io/#CraftsmanHyj/SimplePermission)
-
 处理需要动态申请的用户权限。对于拒绝、不在询问有做再次调起的逻辑处理，支持国产定制系统。
 
 支持一次申请当个、多个动态权限；
@@ -26,9 +24,11 @@ allprojects {
 
 **Step 2.** 在当前APP`Demo/build.gradle`文件中加入库的依赖
 
+version：[![](https://jitpack.io/v/CraftsmanHyj/SimplePermission.svg)](https://jitpack.io/#CraftsmanHyj/SimplePermission)
+
 ```groovy
 dependencies {
-        implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.1'
+    implementation 'com.github.CraftsmanHyj:SimplePermission:${version}'
 }
 ```
 
@@ -65,7 +65,20 @@ public enum PermsEnm implements IPermissionInfo {
 
 
 
-**Step 2.** 执行申请逻辑
+**Step 2.** 注册回调
+
+```java
+@Override
+public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    //用户的允许、拒绝的统一回调
+    PermissionManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+}
+```
+
+
+
+**Step 3.** 执行申请逻辑
 
 **Activity**中使用方法：
 
