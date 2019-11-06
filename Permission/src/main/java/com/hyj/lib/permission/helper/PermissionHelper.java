@@ -13,7 +13,6 @@ import java.util.List;
  * Date：2019/1/2 23:05
  */
 public abstract class PermissionHelper {
-
     private Activity activity;
 
     public Activity getHost() {

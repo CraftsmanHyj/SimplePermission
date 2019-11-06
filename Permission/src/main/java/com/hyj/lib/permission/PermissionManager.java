@@ -31,18 +31,34 @@ public class PermissionManager {
      * 用于存放权限回调
      */
     private static final Map<String, PermissionCallback> mCallBack = new HashMap<>();
+    /**
+     * 用于存放请求的权限
+     */
+    private static final Map<String, String[]> mPerms = new HashMap<>();
 
     /**
      * 检查所请求的权限是否被授予
      *
-     * @param activity
-     * @param perms
+     * @param activity 上下文对象
+     * @param permInfo 权限请求信息
+     * @return
+     */
+    public static boolean hasPermissions(@NonNull Activity activity, IPermissionInfo permInfo) {
+        NullUtils.checkIPermInfo(permInfo);
+
+        return hasPermissions(activity, permInfo.getPermissions());
+    }
+
+    /**
+     * 检查所请求的权限是否被授予
+     *
+     * @param activity 上下文对象
+     * @param perms    权限请求信息
      * @return
      */
     public static boolean hasPermissions(@NonNull Activity activity, String... perms) {
-        if (null == activity) {
-            throw new IllegalArgumentException("activity is null");
-        }
+        NullUtils.checkActivity(activity);
+        NullUtils.checkPermissioins(perms);
 
         //低于6.0,无线权限判断
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -60,26 +76,40 @@ public class PermissionManager {
     }
 
     /**
-     * 申请一个动态权限
+     * 申请动态权限
      *
      * @param activity 上下文对象
      * @param callback 权限处理结果回调
      * @param permInfo 权限请求信息
      */
-    public static void requestPermissions(@NonNull Activity activity,
-                                          @NonNull PermissionCallback callback,
-                                          IPermissionInfo permInfo) {
-        mCallBack.put(generateCallBackKey(activity, permInfo.getRequestCode()), callback);
+    public static void requestPermissions(@NonNull Activity activity, @NonNull PermissionCallback callback, IPermissionInfo permInfo) {
+        NullUtils.checkIPermInfo(permInfo);
+        requestPermissions(activity, callback, permInfo.getRequestCode(), permInfo.getPermissions());
+    }
+
+    /**
+     * 申请动态权限
+     *
+     * @param activity    上下文对象
+     * @param callback    权限处理结果回调
+     * @param requestCode 权限请求码
+     * @param perms       权限请求信息
+     */
+    public static void requestPermissions(@NonNull Activity activity, @NonNull PermissionCallback callback, int requestCode, String... perms) {
+        NullUtils.checkActivity(activity);
+        NullUtils.checkPermissioins(perms);
+
+        String key = generateCallBackKey(activity, requestCode);
+        mCallBack.put(key, callback);
 
         //发起请求之前，还要做一次检查
-        if (hasPermissions(activity, permInfo.getPermissions())) {  //全部通过
-            notifyHasPermissions(activity, permInfo.getRequestCode(), permInfo.getPermissions());
+        if (hasPermissions(activity, perms)) {  //全部通过
+            notifyHasPermissions(activity, requestCode, perms);
             return;
         }
 
         //权限申请
-        PermissionHelper.newInstance(activity).requestPermissions(permInfo.getRequestCode(), permInfo.getPermissions());
-        return;
+        PermissionHelper.newInstance(activity).requestPermissions(requestCode, perms);
     }
 
     /**
@@ -110,9 +140,30 @@ public class PermissionManager {
     }
 
     /**
-     * 处理权限请求结果方法
-     * 如果授予、拒绝任何权限，将通过PermissionCallback回调接收结果
-     * 以及运行有@IPermission注解的方法
+     * <pre>
+     *     处理拒绝且不再询问之后，进入应用权限设置页面设置后
+     *     返回App的页面，接收返回结果的处理
+     * </pre>
+     *
+     * @param activity
+     * @param requestCode
+     */
+    public static void onActivityResult(Activity activity, int requestCode) {
+        String key = generateCallBackKey(activity, requestCode);
+        String[] perms = mPerms.get(key);
+        int[] grantResults = new int[perms.length];
+        for (int i = 0, len = perms.length; i < len; i++) {
+            grantResults[i] = hasPermissions(activity, perms[i]) ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
+        }
+        onRequestPermissionsResult(activity, requestCode, perms, grantResults);
+    }
+
+    /**
+     * <pre>
+     *     处理权限请求结果方法
+     *     如果授予、拒绝任何权限，将通过PermissionCallback回调接收结果
+     *     以及运行有@IPermission注解的方法
+     * </pre>
      *
      * @param activity     拥有实现PermissionCallback接口或有@IPermission注解的Activity
      * @param requestCode  回调请求码
