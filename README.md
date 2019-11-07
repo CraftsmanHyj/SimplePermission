@@ -5,7 +5,7 @@
 
 支持拒绝后弹窗询问再次请求及提示语自定义；
 
-[更新日志]([https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97.md](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/更新日志.md) )
+[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )
 
 [下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
