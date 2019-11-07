@@ -7,7 +7,7 @@
 
 [下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
-![](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
+![]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
 # 添加依赖
 
@@ -78,12 +78,27 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
 
 
 
-**Step 3.** 执行申请逻辑
+**Step 3.** 拒绝且不再提示逻辑处理
+
+当执行拒绝且不再提示的逻辑之后，会弹出再次询问，跳转到设置界面去设置权限的逻辑；结果接收处理
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    //从应用权限设置页面返回，可以从这里获取到设置的结果
+    PermissionManager.onActivityResult(this, requestCode);
+}
+```
+
+
+
+**Step 4.** 执行申请逻辑
 
 **Activity**中使用方法：
 
 ```java
-PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatActivity>(this) {
+PermissionManager.requestPermissions(this, new SimplePermissionCallback<AppCompatActivity>(this) {
     @Override
     public void onPermissionGranted(int reqeustCode, List<String> perms) {
         ToastUtils.showToast(PermissionActivity.this, "activity 已经获取了相机权限");
@@ -104,7 +119,7 @@ PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatA
 **Fragment**中使用方法
 
 ```java
-PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<Fragment>(this) {
+PermissionManager.requestPermissions(getActivity(), new SimplePermissionCallback<Fragment>(this) {
     @Override
     public void onPermissionGranted(int reqeustCode, List<String> perms) {
         ToastUtils.showToast(getContext(), "frame fragment 已经获取了相机权限");
@@ -121,26 +136,4 @@ PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<F
     }
 }, PermsEnm.CAMER);
 ```
-
-
-
-**Step 4.** 拒绝且不再提示逻辑处理
-
-当执行拒绝且不再提示的逻辑之后，会弹出再次询问，跳转到设置界面去设置权限的逻辑；结果接收处理
-
-```java
-@Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    //从应用权限设置页面返回，可以从这里获取到设置的结果
-    if (PermsEnm.CAMER.getRequestCode() == requestCode) {
-        ToastUtils.showToast(this, "activity 相机权限 onActivityResult");
-    } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
-        ToastUtils.showToast(this, "activity 位置、联系人权限 onActivityResult");
-    }
-}
-```
-
-
 
