@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.hyj.lib.permission.PermissionManager;
-import com.hyj.lib.permission.callback.PermissionCallbackImpl;
+import com.hyj.lib.permission.callback.SimplePermissionCallback;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class PermissionActivity extends AppCompatActivity {
      * @param view
      */
     public void simplePermission(View view) {
-        PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatActivity>(this) {
+        PermissionManager.requestPermissions(this, new SimplePermissionCallback<AppCompatActivity>(this) {
             @Override
             public void onPermissionGranted(int reqeustCode, List<String> perms) {
                 ToastUtils.showToast(PermissionActivity.this, "activity 已经获取了相机权限");
@@ -56,7 +56,7 @@ public class PermissionActivity extends AppCompatActivity {
      * @param view
      */
     public void multiPermission(View view) {
-        PermissionManager.requestPermissions(this, new PermissionCallbackImpl<AppCompatActivity>(this) {
+        PermissionManager.requestPermissions(this, new SimplePermissionCallback<AppCompatActivity>(this) {
             @Override
             public void onPermissionGranted(int reqeustCode, List<String> perms) {
                 ToastUtils.showToast(PermissionActivity.this, "activity 允许位置、联系人权限");
@@ -84,12 +84,7 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //从应用权限设置页面返回，可以从这里获取到设置的结果
-        if (PermsEnm.CAMER.getRequestCode() == requestCode) {
-            ToastUtils.showToast(this, "activity 相机权限 onActivityResult");
-        } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
-            ToastUtils.showToast(this, "activity 位置、联系人权限 onActivityResult");
-        }
+        PermissionManager.onActivityResult(this, requestCode);
     }
 }

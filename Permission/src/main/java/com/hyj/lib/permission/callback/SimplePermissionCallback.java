@@ -15,15 +15,15 @@ import java.util.List;
  * Author：hyj
  * Date：2019/1/6 10:54
  */
-public class PermissionCallbackImpl<T> implements PermissionCallback {
+public class SimplePermissionCallback<T> implements IPermissionCallback {
     private final T actFmgInstance;
 
     /**
-     * {@link PermissionCallback}的简单实现
+     * {@link IPermissionCallback}的简单实现
      *
      * @param actFmg 必须是 android.app.Activity 或者 android.support.v4.app.Fragment 的子类
      */
-    public PermissionCallbackImpl(T actFmg) {
+    public SimplePermissionCallback(T actFmg) {
         if (!(actFmg instanceof Activity) && !(actFmg instanceof Fragment)) {
             throw new IllegalArgumentException("argument must be instanceof android.app.Activity or android.support.v4.app.Fragment");
         }

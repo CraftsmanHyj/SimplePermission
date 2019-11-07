@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hyj.lib.permission.PermissionManager;
-import com.hyj.lib.permission.callback.PermissionCallbackImpl;
+import com.hyj.lib.permission.callback.SimplePermissionCallback;
 
 import java.util.List;
 
@@ -22,7 +22,6 @@ import java.util.List;
  * Date：2019/2/10 21:00
  */
 public class PermFrameFragment extends Fragment implements View.OnClickListener {
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
      * 单个权限申请
      */
     private void fragmentSimplePermission() {
-        PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<Fragment>(this) {
+        PermissionManager.requestPermissions(getActivity(), new SimplePermissionCallback<Fragment>(this) {
             @Override
             public void onPermissionGranted(int reqeustCode, List<String> perms) {
                 ToastUtils.showToast(getContext(), "frame fragment 已经获取了相机权限");
@@ -75,7 +74,7 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
      * 多个权限申请
      */
     private void fragmentMultiPermission() {
-        PermissionManager.requestPermissions(getActivity(), new PermissionCallbackImpl<Fragment>(this) {
+        PermissionManager.requestPermissions(getActivity(), new SimplePermissionCallback<Fragment>(this) {
             @Override
             public void onPermissionGranted(int reqeustCode, List<String> perms) {
                 ToastUtils.showToast(getContext(), "frame fragment 允许位置、联系人权限");
@@ -103,12 +102,7 @@ public class PermFrameFragment extends Fragment implements View.OnClickListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         //从应用权限设置页面返回，可以从这里获取到设置的结果
-        if (PermsEnm.CAMER.getRequestCode() == requestCode) {
-            ToastUtils.showToast(getContext(), "frame fragment 相机权限 onActivityResult");
-        } else if (PermsEnm.LOCATION_CONTACTS.getRequestCode() == requestCode) {
-            ToastUtils.showToast(getContext(), "frame fragment 位置、联系人权限 onActivityResult");
-        }
+        PermissionManager.onActivityResult(getActivity(), requestCode);
     }
 }

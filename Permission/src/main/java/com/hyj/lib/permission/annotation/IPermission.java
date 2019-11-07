@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * <pre>
+ *     权限注解
  * </pre>
  * Author：hyj
  * Date：2019/1/4 23:29

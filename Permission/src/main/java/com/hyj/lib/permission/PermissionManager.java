@@ -8,8 +8,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.hyj.lib.permission.annotation.IPermission;
 import com.hyj.lib.permission.bean.IPermissionInfo;
-import com.hyj.lib.permission.callback.PermissionCallback;
+import com.hyj.lib.permission.callback.IPermissionCallback;
 import com.hyj.lib.permission.helper.PermissionHelper;
+import com.hyj.lib.permission.utils.NullUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,11 +31,11 @@ public class PermissionManager {
     /**
      * 用于存放权限回调
      */
-    private static final Map<String, PermissionCallback> mCallBack = new HashMap<>();
+    private static final Map<String, IPermissionCallback> mCallBack = new HashMap<>();
     /**
      * 用于存放请求的权限
      */
-    private static final Map<String, String[]> mPerms = new HashMap<>();
+    private static final Map<String, List<String>> mPerms = new HashMap<>();
 
     /**
      * 检查所请求的权限是否被授予
@@ -66,8 +67,8 @@ public class PermissionManager {
         }
 
         for (String perm : perms) {
-            //任意一个权限被拒绝，就返回false;
             if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(activity, perm)) {
+                //任意一个权限被拒绝，就返回false;
                 return false;
             }
         }
@@ -82,7 +83,7 @@ public class PermissionManager {
      * @param callback 权限处理结果回调
      * @param permInfo 权限请求信息
      */
-    public static void requestPermissions(@NonNull Activity activity, @NonNull PermissionCallback callback, IPermissionInfo permInfo) {
+    public static void requestPermissions(@NonNull Activity activity, @NonNull IPermissionCallback callback, IPermissionInfo permInfo) {
         NullUtils.checkIPermInfo(permInfo);
         requestPermissions(activity, callback, permInfo.getRequestCode(), permInfo.getPermissions());
     }
@@ -95,7 +96,7 @@ public class PermissionManager {
      * @param requestCode 权限请求码
      * @param perms       权限请求信息
      */
-    public static void requestPermissions(@NonNull Activity activity, @NonNull PermissionCallback callback, int requestCode, String... perms) {
+    public static void requestPermissions(@NonNull Activity activity, @NonNull IPermissionCallback callback, int requestCode, String... perms) {
         NullUtils.checkActivity(activity);
         NullUtils.checkPermissioins(perms);
 
@@ -149,13 +150,34 @@ public class PermissionManager {
      * @param requestCode
      */
     public static void onActivityResult(Activity activity, int requestCode) {
-        String key = generateCallBackKey(activity, requestCode);
-        String[] perms = mPerms.get(key);
-        int[] grantResults = new int[perms.length];
-        for (int i = 0, len = perms.length; i < len; i++) {
-            grantResults[i] = hasPermissions(activity, perms[i]) ? PackageManager.PERMISSION_GRANTED : PackageManager.PERMISSION_DENIED;
+        String callBackKey = generateCallBackKey(activity, requestCode);
+        IPermissionCallback callback = mCallBack.get(callBackKey);
+        if (null == callback) {
+            return;
         }
-        onRequestPermissionsResult(activity, requestCode, perms, grantResults);
+
+        List<String> granted = new ArrayList<>();//已经被授权的权限
+        List<String> denied = new ArrayList<>();//已经被拒绝的权限
+
+        List<String> perms = mPerms.get(callBackKey);
+        for (String perm : perms) {
+            if (hasPermissions(activity, perm)) {
+                granted.add(perm);
+            } else {
+                denied.add(perm);
+            }
+        }
+
+        if (!denied.isEmpty()) {     //被拒绝的授权
+            callback.onPermissionDenied(requestCode, denied);
+        }
+
+        if (!granted.isEmpty() && denied.isEmpty()) {   //全部通过了
+            callback.onPermissionGranted(requestCode, granted);
+        }
+
+        mCallBack.remove(callBackKey);
+        mPerms.remove(callback);
     }
 
     /**
@@ -196,23 +218,28 @@ public class PermissionManager {
      */
     private static void callBcakMethod(Activity activity, int requestCode, List<String> granted, List<String> denied) {
         String callBackKey = generateCallBackKey(activity, requestCode);
-        PermissionCallback callback = mCallBack.get(callBackKey);
-        mCallBack.remove(callBackKey);
-
+        IPermissionCallback callback = mCallBack.get(callBackKey);
         if (null == callback) {
             return;
         }
 
         if (!denied.isEmpty()) {     //被拒绝的授权
             if (somePermissionPermanetlyDenied(activity, denied)) {     //勾选了不再询问
+                List<String> lPerms = new ArrayList<>();
+                lPerms.addAll(granted);
+                lPerms.addAll(denied);
+                mPerms.put(callBackKey, lPerms);
+
                 callback.onPermissionPermanetlyDenied(requestCode, denied);
             } else {    //拒绝授权
+                mCallBack.remove(callBackKey);
                 callback.onPermissionDenied(requestCode, denied);
             }
         }
 
         //全部通过了
         if (!granted.isEmpty() && denied.isEmpty()) {
+            mCallBack.remove(callBackKey);
             callback.onPermissionGranted(requestCode, granted);
         }
     }
@@ -227,8 +254,8 @@ public class PermissionManager {
      */
     private static void annotationMethod(Activity activity, int requestCode, List<String> granted, List<String> denied) {
         //做回调，通知Acticity
-        if (activity instanceof PermissionCallback) {
-            PermissionCallback callback = ((PermissionCallback) activity);
+        if (activity instanceof IPermissionCallback) {
+            IPermissionCallback callback = ((IPermissionCallback) activity);
 
             if (!granted.isEmpty()) {    //含有授权的权限
                 callback.onPermissionGranted(requestCode, granted);
