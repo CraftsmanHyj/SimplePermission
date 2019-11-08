@@ -13,9 +13,9 @@ android {
 
     signingConfigs {
         releaseSign {    //正式签名
-            storeFile file(STORE_FILE)
             keyAlias KEY_ALIAS
             keyPassword KEY_PASSWORD
+            storeFile file(STORE_FILE)
             storePassword STORE_PASSWORD
         }
     }
