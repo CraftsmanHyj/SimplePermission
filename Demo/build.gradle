@@ -28,7 +28,7 @@ android {
             minifyEnabled true  //编译时是否混淆
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            signingConfig signingConfigs.releaseSign     //签名信息
+//            signingConfig signingConfigs.releaseSign     //签名信息
         }
     }
 }
