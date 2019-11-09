@@ -13,10 +13,14 @@ android {
 
     signingConfigs {
         releaseSign {    //正式签名
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_PASSWORD
+//            storeFile file(STORE_FILE)
+//            storePassword STORE_PASSWORD
+            keyAlias "CraftsmanHyj"
+            keyPassword "12345678"
             storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
+            storePassword "12345678"
         }
     }
 
