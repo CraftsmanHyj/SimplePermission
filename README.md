@@ -30,7 +30,7 @@ version：[![](https://jitpack.io/v/CraftsmanHyj/SimplePermission.svg)](https://
 
 ```groovy
 dependencies {
-    implementation 'com.github.CraftsmanHyj:SimplePermission:${version}'
+    implementation 'com.github.CraftsmanHyj:SimplePermission:version'
 }
 ```
 
