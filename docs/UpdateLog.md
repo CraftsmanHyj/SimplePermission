@@ -2,7 +2,7 @@
 
 
 
-## 1.0.2
+## 1.0.2	2019-11-09
 
 + PermissionCallback回调方法修改为IPermissionCallback
 
@@ -26,6 +26,6 @@
 
 
 
-## 1.0.1
+## 1.0.1	2019-09-21
 
 + SimplePermission立项

@@ -5,11 +5,11 @@
 
 支持拒绝后弹窗询问再次请求及提示语自定义；
 
-[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )
+[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )；[动态权限列表](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E.md);
 
 [下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
-![](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
+![Demo下载地址#50$](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
 # 添加依赖
 
