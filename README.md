@@ -12,7 +12,7 @@
 ![Demo下载地址](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
 ```javascript
-<img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png" align="left" height="128" width="128" >
+<img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png" height="128" width="128" >
 ```
 
 # 添加依赖
