@@ -11,6 +11,10 @@
 
 ![Demo下载地址](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
+```javascript
+<a href="url"><img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png" align="left" height="128" width="128" ></a>
+```
+
 # 添加依赖
 
 **Step 1.** 在项目的根目录`build.gradle`文件中加入JitPack仓库
