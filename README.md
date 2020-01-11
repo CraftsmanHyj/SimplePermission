@@ -11,6 +11,8 @@
 
 ![Demo下载地址](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
 
+
+
 ```javascript
 <img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png"  width="128" >
 ```
