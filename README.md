@@ -1,13 +1,13 @@
 # SimplePermission
-处理需要动态申请的用户权限。对于拒绝、不再询问有做再次调起的逻辑处理，支持国产定制系统。
+处理需要动态申请的用户权限：
 
-支持一次申请当个、多个动态权限；
++ 对于拒绝、不再询问有做再次调起的逻辑封装，支持国产定制系统。
++ 支持一次申请当个、多个动态权限；
++ 支持拒绝后弹窗询问再次请求及提示语自定义；
 
-支持拒绝后弹窗询问再次请求及提示语自定义；
 
-[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )；[动态权限列表](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E.md);
 
-[下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
+[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )；	[动态权限列表](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E.md);	[下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
 <img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png"  width="128" height="128" alt="Demo下载二维码">
 
@@ -38,7 +38,7 @@ dependencies {
 
 # 使用示例
 
-**Step 1.** 定义申请权限枚举类
+**Step 1.** 定义申请权限枚举类，注意构造函数中`code`的赋值方式；
 
 ```java
 public enum PermsEnm implements IPermissionInfo {
@@ -82,7 +82,7 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
 
 **Step 3.** 拒绝且不再提示逻辑处理
 
-当执行拒绝且不再提示的逻辑之后，会弹出再次询问，跳转到设置界面去设置权限的逻辑；结果接收处理
+当执行拒绝且不再提示的逻辑之后，会弹出再次询问，跳转到设置界面去设置权限的逻辑；注册接收返回结果处理回调；
 
 ```java
 @Override
