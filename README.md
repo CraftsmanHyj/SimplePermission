@@ -9,21 +9,7 @@
 
 [下载Demo查看效果](https://github.com/CraftsmanHyj/SimplePermission/raw/master/docs/Demo.apk)
 
-![Demo下载地址](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png)
-
-
-
-<img width="150" height="150" src="https://img-blog.csdn.net/20161028230559575"/>
-
-
-
-<img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png"  width="128" >
-
-
-
-```html
-<img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png"  width="128" >
-```
+<img src="https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/DemoQR.png"  width="128" height="128" alt="Demo下载二维码">
 
 # 添加依赖
 
