@@ -76,7 +76,7 @@ public enum PermsEnm implements IPermissionInfo {
 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     //用户的允许、拒绝的统一回调
-    PermissionManager.onRequestPermissionsResult(getActivity(), requestCode, permissions, grantResults);
+    PermissionManager.onRequestPermissionsResult(mActivity, requestCode, permissions, grantResults);
 }
 ```
 
@@ -91,7 +91,7 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
 public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     //从应用权限设置页面返回，可以从这里获取到设置的结果
-    PermissionManager.onActivityResult(getActivity(), requestCode);
+    PermissionManager.onActivityResult(mActivity, requestCode);
 }
 ```
 
