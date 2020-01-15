@@ -6,16 +6,16 @@ android {
         applicationId "com.hyj.permission.demo"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         releaseSign {    //正式签名
-            storeFile file(STORE_FILE)
             keyAlias KEY_ALIAS
             keyPassword KEY_PASSWORD
+            storeFile file(STORE_FILE)
             storePassword STORE_PASSWORD
         }
     }
@@ -41,8 +41,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //直接依赖项目
-    implementation project(path: ':Permission')
-    //使用远程库
-//    implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.1'
+    implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.2' //使用远程库
+//    implementation project(path: ':Permission')   //直接依赖项目
 }
