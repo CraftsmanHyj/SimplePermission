@@ -40,6 +40,8 @@ dependencies {
 
 **Step 1.** 定义申请权限枚举类，注意构造函数中`code`的赋值方式；
 
+注意够着函数中`code`的赋值方式`this.code = PermConstant.getReqeustCode();`
+
 ```java
 public enum PermsEnm implements IPermissionInfo {
     CAMER(Manifest.permission.CAMERA),
@@ -67,14 +69,14 @@ public enum PermsEnm implements IPermissionInfo {
 
 
 
-**Step 2.** 注册回调
+**Step 2.** 在基类或使用到的Activity、Fragment中分别注册回调方法
 
 ```java
 @Override
 public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     //用户的允许、拒绝的统一回调
-    PermissionManager.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
+    PermissionManager.onRequestPermissionsResult(getActivity(), requestCode, permissions, grantResults);
 }
 ```
 
@@ -86,10 +88,10 @@ public void onRequestPermissionsResult(int requestCode, @NonNull String[] permis
 
 ```java
 @Override
-protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     //从应用权限设置页面返回，可以从这里获取到设置的结果
-    PermissionManager.onActivityResult(this, requestCode);
+    PermissionManager.onActivityResult(getActivity(), requestCode);
 }
 ```
 
@@ -139,3 +141,21 @@ PermissionManager.requestPermissions(getActivity(), new SimplePermissionCallback
 }, PermsEnm.CAMER);
 ```
 
+
+
+在注册了`onRequestPermissionsResult`、`onActivityResult`两个方法之后，不同的操作会对应到SimplePermissionCallback的不同的回调方法上：
+
++ onPermissionGranted调用场景：
+
+  + 用户点击允许
+  + 弹出跳转设置框，点击设置，选择允许后返回
+
++ onPermissionDenied调用场景：
+
+  + 用户点击禁止
+  + 弹出跳转设置框，点击取消
+  + 弹出跳转设置框，点击设置，跳转后，未选择允许此权限，返回界面
+
++ getPermissionSetMsg调用场景：
+
+  勾选了“不在询问”之后，弹出授权提示Dialog时候的提示语
