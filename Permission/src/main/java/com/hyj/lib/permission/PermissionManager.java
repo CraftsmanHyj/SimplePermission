@@ -10,7 +10,7 @@ import com.hyj.lib.permission.annotation.IPermission;
 import com.hyj.lib.permission.bean.IPermissionInfo;
 import com.hyj.lib.permission.callback.IPermissionCallback;
 import com.hyj.lib.permission.helper.PermissionHelper;
-import com.hyj.lib.permission.utils.NullUtils;
+import com.hyj.lib.permission.utils.PermUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,7 +27,7 @@ import java.util.Map;
  * Author：hyj
  * Date：2019/1/2 22:52
  */
-public class PermissionManager {
+public final class PermissionManager {
     /**
      * 用于存放权限回调
      */
@@ -45,7 +45,7 @@ public class PermissionManager {
      * @return
      */
     public static boolean hasPermissions(@NonNull Activity activity, IPermissionInfo permInfo) {
-        NullUtils.checkIPermInfo(permInfo);
+        PermUtils.checkIPermInfo(permInfo);
 
         return hasPermissions(activity, permInfo.getPermissions());
     }
@@ -58,8 +58,8 @@ public class PermissionManager {
      * @return
      */
     public static boolean hasPermissions(@NonNull Activity activity, String... perms) {
-        NullUtils.checkActivity(activity);
-        NullUtils.checkPermissioins(perms);
+        PermUtils.checkActivity(activity);
+        PermUtils.checkPermissioins(perms);
 
         //低于6.0,无线权限判断
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -84,7 +84,7 @@ public class PermissionManager {
      * @param permInfo 权限请求信息
      */
     public static void requestPermissions(@NonNull Activity activity, @NonNull IPermissionCallback callback, IPermissionInfo permInfo) {
-        NullUtils.checkIPermInfo(permInfo);
+        PermUtils.checkIPermInfo(permInfo);
         requestPermissions(activity, callback, permInfo.getRequestCode(), permInfo.getPermissions());
     }
 
@@ -97,8 +97,8 @@ public class PermissionManager {
      * @param perms       权限请求信息
      */
     public static void requestPermissions(@NonNull Activity activity, @NonNull IPermissionCallback callback, int requestCode, String... perms) {
-        NullUtils.checkActivity(activity);
-        NullUtils.checkPermissioins(perms);
+        PermUtils.checkActivity(activity);
+        PermUtils.checkPermissioins(perms);
 
         String key = generateCallBackKey(activity, requestCode);
         mCallBack.put(key, callback);

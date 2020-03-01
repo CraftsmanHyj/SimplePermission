@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hyj.lib.permission.dialog.AppSettingDialog;
 import com.hyj.lib.permission.helper.PermissionHelper;
 
 import java.util.ArrayList;
@@ -96,7 +95,7 @@ public class PermissionNativeFragment extends Fragment implements View.OnClickLi
         if (!denied.isEmpty()) {     //被拒绝的授权
             if (somePermissionPermanetlyDenied(activity, denied)) {     //勾选了不再询问
                 AppSettingDialog.<Fragment>Builder(this)
-                        .setCancelListener(new DialogInterface.OnClickListener() {
+                        .setNegativeListener(new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 ToastUtils.showToast(getContext(), "native fragment 权限被拒绝");
