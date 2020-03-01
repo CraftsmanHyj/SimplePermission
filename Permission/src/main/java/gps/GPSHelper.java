@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.hyj.lib.permission.bean.PermConstant;
@@ -40,24 +39,13 @@ public class GPSHelper {
     private static final Map<String, IGPSCallBack> mCallBack = new HashMap<>();
 
     /**
-     * 生成CallBack的key
-     *
-     * @param context
-     * @param requestCode
-     * @return
-     */
-    private static String generateCallBackKey(@NonNull Context context, int requestCode) {
-        return context.getClass().getName() + "." + requestCode;
-    }
-
-    /**
      * 注册 onActivityResult回调方法
      *
      * @param context
      * @param requestCode
      */
     public static void onActivityResult(Context context, int requestCode) {
-        String callBackKey = generateCallBackKey(context, requestCode);
+        String callBackKey = PermUtils.generateCallBackKey(context, requestCode);
         IGPSCallBack callback = mCallBack.get(callBackKey);
         if (null == callback || REQEUST_CODE_GPS != requestCode) {
             return;
@@ -104,14 +92,12 @@ public class GPSHelper {
         }
 
         Activity act = PermUtils.getActivity(actFmg);
-
         if (isOpenStatus(act)) {    //已经开启了GPS
             callBack.grantedGPS();
             return;
         }
 
-        String key = generateCallBackKey(act, REQEUST_CODE_GPS);
-        mCallBack.put(key, callBack);
+        mCallBack.put(PermUtils.generateCallBackKey(act, REQEUST_CODE_GPS), callBack);
 
         new AppSettingDialog.Builder(act)
                 .setMessage(callBack.requestGPSTip())

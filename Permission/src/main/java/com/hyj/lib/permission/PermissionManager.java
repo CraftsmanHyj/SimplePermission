@@ -46,7 +46,6 @@ public final class PermissionManager {
      */
     public static boolean hasPermissions(@NonNull Activity activity, IPermissionInfo permInfo) {
         PermUtils.checkIPermInfo(permInfo);
-
         return hasPermissions(activity, permInfo.getPermissions());
     }
 
@@ -100,7 +99,7 @@ public final class PermissionManager {
         PermUtils.checkActivity(activity);
         PermUtils.checkPermissioins(perms);
 
-        String key = generateCallBackKey(activity, requestCode);
+        String key = PermUtils.generateCallBackKey(activity, requestCode);
         mCallBack.put(key, callback);
 
         //发起请求之前，还要做一次检查
@@ -111,17 +110,6 @@ public final class PermissionManager {
 
         //权限申请
         PermissionHelper.newInstance(activity).requestPermissions(requestCode, perms);
-    }
-
-    /**
-     * 生成CallBack的key
-     *
-     * @param activity
-     * @param requestCode
-     * @return
-     */
-    private static String generateCallBackKey(@NonNull Activity activity, int requestCode) {
-        return activity.getClass().getName() + "." + requestCode;
     }
 
     /**
@@ -150,7 +138,7 @@ public final class PermissionManager {
      * @param requestCode
      */
     public static void onActivityResult(Activity activity, int requestCode) {
-        String callBackKey = generateCallBackKey(activity, requestCode);
+        String callBackKey = PermUtils.generateCallBackKey(activity, requestCode);
         IPermissionCallback callback = mCallBack.get(callBackKey);
         if (null == callback) {
             return;
@@ -217,7 +205,7 @@ public final class PermissionManager {
      * @param denied      拒绝的权限
      */
     private static void callBcakMethod(Activity activity, int requestCode, List<String> granted, List<String> denied) {
-        String callBackKey = generateCallBackKey(activity, requestCode);
+        String callBackKey = PermUtils.generateCallBackKey(activity, requestCode);
         IPermissionCallback callback = mCallBack.get(callBackKey);
         if (null == callback) {
             return;

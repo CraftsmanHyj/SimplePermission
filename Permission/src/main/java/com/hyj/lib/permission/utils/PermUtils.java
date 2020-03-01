@@ -1,6 +1,8 @@
 package com.hyj.lib.permission.utils;
 
 import android.app.Activity;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 
 import com.hyj.lib.permission.bean.IPermissionInfo;
@@ -44,6 +46,17 @@ public final class PermUtils {
         if (null == perms || perms.length <= 0) {
             throw new NullPointerException("Permissions is null");
         }
+    }
+
+    /**
+     * 生成CallBack的key
+     *
+     * @param context
+     * @param requestCode
+     * @return
+     */
+    public static String generateCallBackKey(@NonNull Context context, int requestCode) {
+        return context.getClass().getName() + "." + requestCode;
     }
 
     /**
