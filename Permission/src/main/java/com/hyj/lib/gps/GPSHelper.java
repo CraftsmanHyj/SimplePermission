@@ -20,9 +20,8 @@ import java.util.Map;
  * <pre>
  *     手机GPS定位工具类
  *     使用方法
- *     1.调用setGpsResultAction设置回调监听
- *     2.在onActivityResult中注册返回结果处理方法gpsHelper.onActivityResult()
- *     3.gpsHelper.checkGPS()触发gps状态检查
+ *     1.在onActivityResult中注册返回结果处理方法gpsHelper.onActivityResult()
+ *     2.gpsHelper.openGPSLocation()检查用户是否有打开GPS
  * </pre>
  * Author：hyj
  * Date：2020/2/3 17:33
@@ -78,7 +77,11 @@ public class GPSHelper {
     }
 
     /**
-     * 检测用户GPS的开关是否有打开
+     * 检测用户GPS开关是否打开
+     *
+     * @param actFmg   activity或fragment引用
+     * @param callBack 回调函数
+     * @param <T>      泛型
      */
     public static <T> void openGPSLocation(final T actFmg, final IGPSCallBack callBack) {
         if (!(actFmg instanceof Activity) && !(actFmg instanceof Fragment)) {

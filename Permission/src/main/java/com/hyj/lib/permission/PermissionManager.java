@@ -6,6 +6,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 
+import com.hyj.lib.gps.GPSHelper;
+import com.hyj.lib.gps.IGPSCallBack;
 import com.hyj.lib.permission.annotation.IPermission;
 import com.hyj.lib.permission.bean.IPermissionInfo;
 import com.hyj.lib.permission.callback.IPermissionCallback;
@@ -19,9 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.hyj.lib.gps.GPSHelper;
-import com.hyj.lib.gps.IGPSCallBack;
 
 /**
  * <pre>
@@ -40,6 +39,13 @@ public final class PermissionManager {
      */
     private static final Map<String, List<String>> mPerms = new HashMap<>();
 
+    /**
+     * 检测用户是否打开GPS定位功能
+     *
+     * @param actFmg
+     * @param callBack
+     * @param <T>
+     */
     public static <T> void openGPSLocation(final T actFmg, final IGPSCallBack callBack) {
         GPSHelper.openGPSLocation(actFmg, callBack);
     }
