@@ -8,15 +8,11 @@ import android.support.v4.content.ContextCompat;
 
 import com.hyj.lib.gps.GPSHelper;
 import com.hyj.lib.gps.IGPSCallBack;
-import com.hyj.lib.permission.annotation.IPermission;
 import com.hyj.lib.permission.bean.IPermissionInfo;
 import com.hyj.lib.permission.callback.IPermissionCallback;
 import com.hyj.lib.permission.helper.PermissionHelper;
 import com.hyj.lib.permission.utils.PermUtils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -208,7 +204,6 @@ public final class PermissionManager {
         }
 
         callBcakMethod(activity, requestCode, granted, denied);
-//        annotationMethod(activity, requestCode, granted, denied);
     }
 
     /**
@@ -244,81 +239,6 @@ public final class PermissionManager {
         if (!granted.isEmpty() && denied.isEmpty()) {
             mCallBack.remove(callBackKey);
             callback.onPermissionGranted(requestCode, granted);
-        }
-    }
-
-    /**
-     * 结合注解的方式动态申请权限
-     *
-     * @param activity    上下文
-     * @param requestCode 权限请求码
-     * @param granted     同意的权限
-     * @param denied      拒绝的权限
-     */
-    private static void annotationMethod(Activity activity, int requestCode, List<String> granted, List<String> denied) {
-        //做回调，通知Acticity
-        if (activity instanceof IPermissionCallback) {
-            IPermissionCallback callback = ((IPermissionCallback) activity);
-
-            if (!granted.isEmpty()) {    //含有授权的权限
-                callback.onPermissionGranted(requestCode, granted);
-            }
-
-            if (!denied.isEmpty()) {     //被拒绝的授权
-                if (somePermissionPermanetlyDenied(activity, denied)) {     //勾选了不再询问
-                    callback.onPermissionPermanetlyDenied(requestCode, denied);
-                } else {    //拒绝授权
-                    callback.onPermissionDenied(requestCode, denied);
-                }
-            }
-        }
-
-        //全部通过了
-        if (!granted.isEmpty() && denied.isEmpty()) {
-            reflectAnnotationMethod(activity, requestCode);
-        }
-    }
-
-    /**
-     * 找到指定Activity中，有IPermission注解的，并且请求标识参数的正确方法
-     *
-     * @param activity
-     * @param requestCode
-     */
-    private static void reflectAnnotationMethod(Activity activity, int requestCode) {
-        //获取类
-        Class<? extends Activity> clazz = activity.getClass();
-        //获取类的所有方法
-        Method[] methods = clazz.getDeclaredMethods();
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(IPermission.class)) {    //如果方法是IPermission注解
-                IPermission iPermission = method.getAnnotation(IPermission.class);  //获取注解
-                //如果注解的值等于请求标识码(两次匹配，避免框架冲突)
-                if (iPermission.value() == requestCode) {
-                    //严格校验
-
-                    //方法必须是返回void(三次匹配)
-                    Type returnType = method.getGenericReturnType();
-                    if (!"void".equals(returnType.toString())) {
-                        throw new RuntimeException(method.getName() + "方法返回必须是void");
-                    }
-
-                    //方法参数(四次匹配)
-                    Class<?>[] parameterTypes = method.getParameterTypes();
-                    if (parameterTypes.length > 0) {
-                        throw new RuntimeException(method.getName() + "方法不能带有参数");
-                    }
-
-                    try {
-                        if (!method.isAccessible()) { //当方法为私有
-                            method.setAccessible(true);
-                        }
-                        method.invoke(activity);
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
         }
     }
 
