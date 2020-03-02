@@ -1,4 +1,4 @@
-package gps;
+package com.hyj.lib.gps;
 
 import android.app.Activity;
 import android.content.Context;
@@ -51,7 +51,7 @@ public class GPSHelper {
             return;
         }
 
-        if (isOpenStatus(context)) {
+        if (checkGpsStatus(context)) {
             callback.grantedGPS();
         } else {
             callback.denidedGPS();
@@ -66,7 +66,7 @@ public class GPSHelper {
      * @param cxt
      * @return true:已经打开定位；false:没有打开定位
      */
-    public static boolean isOpenStatus(Context cxt) {
+    public static boolean checkGpsStatus(Context cxt) {
         //9.0以下不需要打开GPS,9.0部分需要，10都需要
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
             return true;
@@ -78,11 +78,9 @@ public class GPSHelper {
     }
 
     /**
-     * 检查是否已经打开了GPS，没有的话，直接弹窗提示其去打开
-     *
-     * @return true:已打开；false:未打开
+     * 检测用户GPS的开关是否有打开
      */
-    public static <T> void reqeustGPSPermission(final T actFmg, final IGPSCallBack callBack) {
+    public static <T> void openGPSLocation(final T actFmg, final IGPSCallBack callBack) {
         if (!(actFmg instanceof Activity) && !(actFmg instanceof Fragment)) {
             throw new IllegalArgumentException("argument must be instanceof android.app.Activity or android.support.v4.app.Fragment");
         }
@@ -92,14 +90,14 @@ public class GPSHelper {
         }
 
         Activity act = PermUtils.getActivity(actFmg);
-        if (isOpenStatus(act)) {    //已经开启了GPS
+        if (checkGpsStatus(act)) {    //已经开启了GPS
             callBack.grantedGPS();
             return;
         }
 
         mCallBack.put(PermUtils.generateCallBackKey(act, REQEUST_CODE_GPS), callBack);
 
-        new AppSettingDialog.Builder(act)
+        AppSettingDialog.Builder(act)
                 .setMessage(callBack.requestGPSTip())
                 .setPositiveListener(new DialogInterface.OnClickListener() {
                     @Override

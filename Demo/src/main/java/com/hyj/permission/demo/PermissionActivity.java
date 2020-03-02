@@ -12,9 +12,6 @@ import com.hyj.lib.permission.callback.SimplePermissionCallback;
 
 import java.util.List;
 
-import gps.GPSHelper;
-import gps.SimpleGPSCallback;
-
 /**
  * <pre>
  *     动态权限申请实例类

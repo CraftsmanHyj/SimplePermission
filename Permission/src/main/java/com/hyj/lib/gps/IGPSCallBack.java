@@ -1,4 +1,4 @@
-package gps;
+package com.hyj.lib.gps;
 
 /**
  * <pre>
@@ -6,7 +6,7 @@ package gps;
  * Author：hyj
  * Date：2020/3/1 21:25
  */
-interface IGPSCallBack {
+public interface IGPSCallBack {
     /**
      * 同意GPS请求
      */

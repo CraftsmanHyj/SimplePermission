@@ -35,10 +35,6 @@ public class AppSettingDialog {
         this.NEGATIVELISTENER = buildler.negativeListener;
     }
 
-    public static Builder Builder(@NonNull Context cxt) {
-        return new Builder(cxt);
-    }
-
     public void show() {
         if (null == NEGATIVELISTENER) {
             throw new IllegalArgumentException("对话框取消监听按钮不能为空");
@@ -55,6 +51,10 @@ public class AppSettingDialog {
                 .setNegativeButton(NEGATIVEBUTTON, NEGATIVELISTENER)
                 .create()
                 .show();
+    }
+
+    public static Builder Builder(@NonNull Context cxt) {
+        return new Builder(cxt);
     }
 
     public static class Builder {

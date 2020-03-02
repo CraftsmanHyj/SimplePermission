@@ -1,4 +1,4 @@
-package gps;
+package com.hyj.lib.gps;
 
 /**
  * <pre>

@@ -20,6 +20,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyj.lib.gps.GPSHelper;
+import com.hyj.lib.gps.IGPSCallBack;
+
 /**
  * <pre>
  *     权限管理类
@@ -36,6 +39,10 @@ public final class PermissionManager {
      * 用于存放请求的权限
      */
     private static final Map<String, List<String>> mPerms = new HashMap<>();
+
+    public static <T> void openGPSLocation(final T actFmg, final IGPSCallBack callBack) {
+        GPSHelper.openGPSLocation(actFmg, callBack);
+    }
 
     /**
      * 检查所请求的权限是否被授予
@@ -138,6 +145,8 @@ public final class PermissionManager {
      * @param requestCode
      */
     public static void onActivityResult(Activity activity, int requestCode) {
+        GPSHelper.onActivityResult(activity, requestCode);
+
         String callBackKey = PermUtils.generateCallBackKey(activity, requestCode);
         IPermissionCallback callback = mCallBack.get(callBackKey);
         if (null == callback) {
