@@ -2,6 +2,15 @@
 
 
 
+## 1.0.3	2020-03-03
+
+1. 增加GPS定位检测功能
+   ```PermissionManager.openGPSLocation()```
+2. 小米、华为、oppo、vivo、魅族手机支持直接跳转到权限授权界面
+3. 优化已知bug
+
+
+
 ## 1.0.2	2019-11-09
 
 + PermissionCallback回调方法修改为IPermissionCallback
