@@ -41,6 +41,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.2' //使用远程库
-//    implementation project(path: ':Permission')   //直接依赖项目
+//    implementation 'com.github.CraftsmanHyj:SimplePermission:1.0.3' //使用远程库
+    implementation project(path: ':Permission')   //直接依赖项目
 }

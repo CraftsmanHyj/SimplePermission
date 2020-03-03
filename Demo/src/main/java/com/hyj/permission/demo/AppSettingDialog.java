@@ -70,10 +70,8 @@ public class AppSettingDialog<T> implements DialogInterface.OnClickListener {
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
-        //点击跳转设置
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
-        intent.setData(uri);
+        intent.setData(Uri.fromParts("package", getActivity().getPackageName(), null));
 
         if (ACTIVITY instanceof Activity) {
             ((Activity) ACTIVITY).startActivityForResult(intent, REQEUSTCODE);
