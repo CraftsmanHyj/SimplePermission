@@ -11,14 +11,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        releaseSign {    //正式签名
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-        }
-    }
+//    signingConfigs {
+//        releaseSign {    //正式签名
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_PASSWORD
+//            storeFile file(STORE_FILE)
+//            storePassword STORE_PASSWORD
+//        }
+//    }
 
     buildTypes { //构建的类型方式
         release {
