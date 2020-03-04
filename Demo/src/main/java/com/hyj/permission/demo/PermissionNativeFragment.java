@@ -67,8 +67,15 @@ public class PermissionNativeFragment extends Fragment implements View.OnClickLi
      * 多个权限申请
      */
     private void fragmentMultiPermission() {
-        int flag = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS);
-        if (flag != PackageManager.PERMISSION_GRANTED) {
+        boolean hasPermission = true;
+        for (String permission : PermsEnm.LOCATION_CONTACTS.getPermissions()) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(getContext(), permission)) {
+                hasPermission = false;
+                break;
+            }
+        }
+
+        if (!hasPermission) {
             requestPermissions(PermsEnm.LOCATION_CONTACTS.getPermissions(), PermsEnm.LOCATION_CONTACTS.getRequestCode());
         }
     }

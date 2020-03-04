@@ -50,22 +50,10 @@ public final class PermissionManager {
      * 检查所请求的权限是否被授予
      *
      * @param activity 上下文对象
-     * @param permInfo 权限请求信息
-     * @return
-     */
-    public static boolean hasPermissions(@NonNull Activity activity, IPermissionInfo permInfo) {
-        PermUtils.checkIPermInfo(permInfo);
-        return hasPermissions(activity, permInfo.getPermissions());
-    }
-
-    /**
-     * 检查所请求的权限是否被授予
-     *
-     * @param activity 上下文对象
      * @param perms    权限请求信息
      * @return
      */
-    public static boolean hasPermissions(@NonNull Activity activity, String... perms) {
+    private static boolean hasPermissions(@NonNull Activity activity, String... perms) {
         PermUtils.checkActivity(activity);
         PermUtils.checkPermissioins(perms);
 
@@ -97,13 +85,17 @@ public final class PermissionManager {
     }
 
     /**
-     * 申请动态权限
+     * <pre>
+     *     申请动态权限
+     *     此方法将在后期版本中删除，请调用 requestPermissions(Activity, IPermissionCallback, IPermissionInfo)
+     * </pre>
      *
      * @param activity    上下文对象
      * @param callback    权限处理结果回调
      * @param requestCode 权限请求码
      * @param perms       权限请求信息
      */
+    @Deprecated
     public static void requestPermissions(@NonNull Activity activity, @NonNull IPermissionCallback callback, int requestCode, String... perms) {
         PermUtils.checkActivity(activity);
         PermUtils.checkPermissioins(perms);
@@ -135,48 +127,6 @@ public final class PermissionManager {
             grantResults[i] = PackageManager.PERMISSION_GRANTED;    //全部通过
         }
         onRequestPermissionsResult(activity, requestCode, perms, grantResults);
-    }
-
-    /**
-     * <pre>
-     *     处理拒绝且不再询问之后，进入应用权限设置页面设置后
-     *     返回App的页面，接收返回结果的处理
-     * </pre>
-     *
-     * @param activity
-     * @param requestCode
-     */
-    public static void onActivityResult(Activity activity, int requestCode) {
-        GPSHelper.onActivityResult(activity, requestCode);
-
-        String callBackKey = PermUtils.generateCallBackKey(activity, requestCode);
-        IPermissionCallback callback = mCallBack.get(callBackKey);
-        if (null == callback) {
-            return;
-        }
-
-        List<String> granted = new ArrayList<>();//已经被授权的权限
-        List<String> denied = new ArrayList<>();//已经被拒绝的权限
-
-        List<String> perms = mPerms.get(callBackKey);
-        for (String perm : perms) {
-            if (hasPermissions(activity, perm)) {
-                granted.add(perm);
-            } else {
-                denied.add(perm);
-            }
-        }
-
-        if (!denied.isEmpty()) {     //被拒绝的授权
-            callback.onPermissionDenied(requestCode, denied);
-        }
-
-        if (!granted.isEmpty() && denied.isEmpty()) {   //全部通过了
-            callback.onPermissionGranted(requestCode, granted);
-        }
-
-        mCallBack.remove(callBackKey);
-        mPerms.remove(callback);
     }
 
     /**
@@ -251,5 +201,47 @@ public final class PermissionManager {
      */
     private static boolean somePermissionPermanetlyDenied(Activity activity, List<String> deniedPermissions) {
         return PermissionHelper.newInstance(activity).somePermissionPermanetlyDenied(deniedPermissions);
+    }
+
+    /**
+     * <pre>
+     *     处理拒绝且不再询问之后，进入应用权限设置页面设置后
+     *     返回App的页面，接收返回结果的处理
+     * </pre>
+     *
+     * @param activity
+     * @param requestCode
+     */
+    public static void onActivityResult(Activity activity, int requestCode) {
+        GPSHelper.onActivityResult(activity, requestCode);
+
+        String callBackKey = PermUtils.generateCallBackKey(activity, requestCode);
+        IPermissionCallback callback = mCallBack.get(callBackKey);
+        if (null == callback) {
+            return;
+        }
+
+        List<String> granted = new ArrayList<>();//已经被授权的权限
+        List<String> denied = new ArrayList<>();//已经被拒绝的权限
+
+        List<String> perms = mPerms.get(callBackKey);
+        for (String perm : perms) {
+            if (hasPermissions(activity, perm)) {
+                granted.add(perm);
+            } else {
+                denied.add(perm);
+            }
+        }
+
+        if (!denied.isEmpty()) {     //被拒绝的授权
+            callback.onPermissionDenied(requestCode, denied);
+        }
+
+        if (!granted.isEmpty() && denied.isEmpty()) {   //全部通过了
+            callback.onPermissionGranted(requestCode, granted);
+        }
+
+        mCallBack.remove(callBackKey);
+        mPerms.remove(callback);
     }
 }
