@@ -6,21 +6,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 
 /**
+ * 关于授权后，又关闭权限，导致应用重启的问题
+ * https://blog.csdn.net/suyimin2010/article/details/83445603
  * User: hyj
  * Date: 2022/6/9 16:23
  */
-
-/**
- *TODO
- * 当已经允许的权限拒绝后重启问题：https://blog.csdn.net/suyimin2010/article/details/83445603
- */
-
-/**
- * 发起动态权限请求
- */
-fun ActivityResultLauncher<Array<String>>.launchP(vararg permissions: String) {
-    this.launch(permissions as Array<String>)
-}
 
 /**
  * 生成动态权限申请Launcher
@@ -74,4 +64,11 @@ inline fun <reified T> convertDataType(permissions: List<String>): T {
         arrayOf("a") is T -> permissions.toTypedArray()
         else -> throw IllegalArgumentException("当前方法中的泛型仅支持String、Array<String>两种类型，请检查传入的类型！")
     } as T
+}
+
+/**
+ * 发起动态权限请求
+ */
+fun ActivityResultLauncher<Array<String>>.launchP(vararg permissions: String) {
+    this.launch(permissions as Array<String>)
 }

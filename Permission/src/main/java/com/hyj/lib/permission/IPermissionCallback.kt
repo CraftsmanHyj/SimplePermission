@@ -2,35 +2,10 @@ package com.hyj.lib.permission
 
 import androidx.activity.result.ActivityResultCaller
 
-/**
- * 权限处理结果回调方法
- * User: hyj
- * Date: 2022/6/9 17:23
- */
-interface IPermissionCallback<T> {
-    /**
-     * 授予授权通过的回调方法
-     * @param perms       请求权限组(方便debug,如用户只授权权限组部分权限)
-     */
-    fun granted(perms: T)
-
-    /**
-     * 权限拒绝回调
-     * @param perms       请求的权限组
-     */
-    fun denied(perms: T)
-
-    /**
-     * 权限拒绝，且勾选了不再询问回调
-     * @param perms
-     */
-    fun permanentlyDenied(perms: T)
-}
-
 class IPermissionCallbackImpl<T>(
     private val launcherCaller: ActivityResultCaller,
-    private val placeholder: T
-) : IPermissionCallback<T> {
+    placeholder: T
+) {
     private var onGranted: ((perms: T) -> Unit)? = null
     private var onDenied: ((perms: T) -> Unit)? = null
     private var onPermanentlyDenied: ((perms: T) -> Unit)? = null
@@ -69,15 +44,15 @@ class IPermissionCallbackImpl<T>(
         permanentlyDeniedTip = method.invoke()
     }
 
-    override fun granted(perms: T) {
+    fun granted(perms: T) {
         onGranted?.invoke(perms)
     }
 
-    override fun denied(perms: T) {
+    fun denied(perms: T) {
         onDenied?.invoke(perms)
     }
 
-    override fun permanentlyDenied(perms: T) {
+    fun permanentlyDenied(perms: T) {
         onPermanentlyDenied?.invoke(perms) ?: showSetDialog(perms)
     }
 

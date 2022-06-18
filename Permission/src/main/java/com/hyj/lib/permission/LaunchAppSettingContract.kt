@@ -12,7 +12,7 @@ import androidx.activity.result.contract.ActivityResultContract
  * User: hyj
  * Date: 2022/6/10 16:45
  */
-class LaunchAppSettingsContract<T> : ActivityResultContract<T, T?>() {
+class LaunchAppSettingContract<T> : ActivityResultContract<T, T?>() {
     private var permission: T? = null
 
     override fun createIntent(context: Context, input: T?): Intent {

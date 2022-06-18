@@ -23,32 +23,34 @@ fun ActivityResultCaller.context() =
 /**
  * 应用授权弹窗提示
  */
-fun Context.showPermissionDialog(
+internal fun Context.showPermissionDialog(
     title: CharSequence = "权限申请",
-    message: CharSequence? = null,
+    message: CharSequence = "应用运行需要该权限，请授权！",
+    navigationText: CharSequence = "拒绝",
+    positiveText: CharSequence = "授权",
     cancel: (() -> Unit),
     confirm: (() -> Unit)
 ) = AlertDialog.Builder(this).apply {
     setTitle(title)
-    setMessage(if (message.isNullOrBlank()) "应用运行需要该权限，请授权！" else message)
+    setMessage(message)
 
     setOnCancelListener { cancel() }
-    setNegativeButton("拒绝") { _, _ -> cancel() }
-    setPositiveButton("授权") { _, _ -> confirm() }
+    setNegativeButton(navigationText) { _, _ -> cancel() }
+    setPositiveButton(positiveText) { _, _ -> confirm() }
 }.create().show()
 
 /**
- * 跳转应用设置页的Launcher
+ * 跳转应用详情的设置页的Launcher
  * */
 fun <T> ActivityResultCaller.appSetLauncher(
-    callBack: IPermissionCallback<T>,
+    callBack: IPermissionCallbackImpl<T>,
     placeholder: T
-) = registerForActivityResult(LaunchAppSettingsContract<T?>()) { permissions ->
+) = registerForActivityResult(LaunchAppSettingContract<T?>()) { permissions ->
     if (placeholder is String) {
-        val hasDenied = PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-            context(),
-            permissions as String
-        )
+        val hasDenied =
+            PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                context(), permissions as String
+            )
 
         if (hasDenied) {
             callBack.denied(permissions as T)
