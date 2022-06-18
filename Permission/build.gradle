@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+ext {
+    VERSION_CODE = 1
+    VERSION_NAME = "1.0.0"
+}
+
+android {
+    compileSdk 32
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 32
+
+        buildConfigField 'int', 'versionCode', "$VERSION_CODE"
+        buildConfigField 'String', 'versionName', "\"$VERSION_NAME\""
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //consumerProguardFiles "consumer-rules.pro"
+        //默认的是consumer-rules.pro,如果不修改，自己在proguard-rules.pro配置的混淆规则不会被打到主工程apk中，这样会报错
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false //代码缩减
+            zipAlignEnabled true //Zipalign优化
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    libraryVariants.all { variant ->
+        if (variant.buildType.isDebuggable()) {
+            return
+        }
+
+        // 打包完成后复制到的目录
+        def outputFileDir = "$rootDir/docs/"
+
+        variant.outputs.forEach {
+            def lastDotIndex = it.outputFileName.lastIndexOf(".")
+            def suffix = it.outputFileName.substring(lastDotIndex, it.outputFileName.length())
+            it.outputFileName = "SimplePermission-V${VERSION_NAME}${suffix}"
+        }
+
+        //打包完成后做的一些事,复制apk到指定文件夹
+        variant.assemble.doLast {
+            File out = new File(outputFileDir)
+            copy {
+                variant.outputs.forEach { file ->
+                    copy {
+                        from file.outputFile
+                        into out
+                    }
+                }
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.4.0'
+}

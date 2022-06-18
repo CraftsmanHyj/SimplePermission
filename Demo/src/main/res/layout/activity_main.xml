@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <Button
+            android:id="@+id/btnSinglePermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="单权限(日历)" />
+
+        <Button
+            android:id="@+id/btnMultiPermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="多权限(相机、存储读写)" />
+
+        <Button
+            android:id="@+id/btnCheckGPSStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="检查GPS是否打开" />
+    </LinearLayout>
+</ScrollView>
