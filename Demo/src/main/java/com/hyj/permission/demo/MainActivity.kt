@@ -10,13 +10,13 @@ import com.hyj.lib.permission.registerForPermissionResult
 import com.hyj.permission.demo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private val singlePermissionLauncher = registerForPermissionResult<String> {
+    private val singlePermissionLauncher = registerForPermissionResult {
         onGranted { showToast("单权限：同意了权限请求") }
         onDenied { showToast("单权限：拒绝了权限") }
         onPermanentlyDeniedTip { "单权限：运行APP需要这几个权限，请授权。" }
     }
 
-    private val multiPersmissionLauncher = registerForPermissionResult<Array<String>> {
+    private val multiPersmissionLauncher = registerForPermissionResult {
         onGranted { showToast("多权限：同意了权限请求") }
         onDenied { showToast("多权限：拒绝了权限") }
         onPermanentlyDeniedTip { "多权限：运行APP需要这几个权限，请授权。" }

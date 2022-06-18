@@ -1,39 +1,51 @@
 package com.hyj.lib.permission
 
+import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultCaller
+import androidx.core.content.ContextCompat
 
-class IPermissionCallbackImpl<T>(
-    private val launcherCaller: ActivityResultCaller,
-    placeholder: T
-) {
-    private var onGranted: ((perms: T) -> Unit)? = null
-    private var onDenied: ((perms: T) -> Unit)? = null
-    private var onPermanentlyDenied: ((perms: T) -> Unit)? = null
+class IPermissionCallbackImpl(private val launcherCaller: ActivityResultCaller) {
+    private var onGranted: (() -> Unit)? = null
+    private var onDenied: (() -> Unit)? = null
+    private var onPermanentlyDenied: (() -> Unit)? = null
 
     //“不再询问”后的弹窗提示
     private var permanentlyDeniedTip: String = "应用需要此权限才可以运行，请在设置中授权！"
 
     //跳转到应用详情设置权限
-    private val appSetLauncher = launcherCaller.appSetLauncher(this, placeholder)
+    private val appSetLauncher =
+        launcherCaller.registerForActivityResult(LaunchAppSettingContract()) { permissions ->
+            val denied = permissions?.find {
+                PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                    launcherCaller.context(), it
+                )
+            }
+
+            if (!denied.isNullOrBlank()) {
+                denied()
+            } else {
+                granted()
+            }
+        }
 
     /**
      * 授予授权通过的回调方法
      */
-    fun onGranted(method: (perms: T) -> Unit) {
+    fun onGranted(method: () -> Unit) {
         onGranted = method
     }
 
     /**
      * 权限拒绝回调
      */
-    fun onDenied(method: (perms: T) -> Unit) {
+    fun onDenied(method: () -> Unit) {
         onDenied = method
     }
 
     /**
      * 权限拒绝，且勾选了不再询问时的回调
      */
-    fun onPermanentlyDenied(method: (perms: T) -> Unit) {
+    fun onPermanentlyDenied(method: () -> Unit) {
         onPermanentlyDenied = method
     }
 
@@ -44,23 +56,23 @@ class IPermissionCallbackImpl<T>(
         permanentlyDeniedTip = method.invoke()
     }
 
-    fun granted(perms: T) {
-        onGranted?.invoke(perms)
+    internal fun granted() {
+        onGranted?.invoke()
     }
 
-    fun denied(perms: T) {
-        onDenied?.invoke(perms)
+    internal fun denied() {
+        onDenied?.invoke()
     }
 
-    fun permanentlyDenied(perms: T) {
-        onPermanentlyDenied?.invoke(perms) ?: showSetDialog(perms)
+    internal fun permanentlyDenied(deniedPermission: Array<String>) {
+        onPermanentlyDenied?.invoke() ?: showSetDialog(deniedPermission)
     }
 
-    private fun showSetDialog(perms: T) {
+    private fun showSetDialog(deniedPermission: Array<String>) {
         launcherCaller.context().showPermissionDialog(
             message = permanentlyDeniedTip,
-            cancel = { denied(perms) },
-            confirm = { appSetLauncher.launch(perms) }
+            cancel = { denied() },
+            confirm = { appSetLauncher.launch(deniedPermission) }
         )
     }
 }

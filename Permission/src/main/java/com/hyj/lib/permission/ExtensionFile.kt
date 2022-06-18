@@ -2,10 +2,8 @@ package com.hyj.lib.permission
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 /**
@@ -38,35 +36,3 @@ internal fun Context.showPermissionDialog(
     setNegativeButton(navigationText) { _, _ -> cancel() }
     setPositiveButton(positiveText) { _, _ -> confirm() }
 }.create().show()
-
-/**
- * 跳转应用详情的设置页的Launcher
- * */
-fun <T> ActivityResultCaller.appSetLauncher(
-    callBack: IPermissionCallbackImpl<T>,
-    placeholder: T
-) = registerForActivityResult(LaunchAppSettingContract<T?>()) { permissions ->
-    if (placeholder is String) {
-        val hasDenied =
-            PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                context(), permissions as String
-            )
-
-        if (hasDenied) {
-            callBack.denied(permissions as T)
-        } else {
-            callBack.granted(permissions as T)
-        }
-    } else {
-        val perms = permissions as Array<String?>?
-        val denied = perms?.find {
-            PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(context(), it!!)
-        }
-
-        if (!denied.isNullOrBlank()) {
-            callBack.denied(permissions as T)
-        } else {
-            callBack.granted(permissions as T)
-        }
-    }
-}

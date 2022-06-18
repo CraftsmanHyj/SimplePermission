@@ -12,16 +12,16 @@ import androidx.activity.result.contract.ActivityResultContract
  * User: hyj
  * Date: 2022/6/10 16:45
  */
-class LaunchAppSettingContract<T> : ActivityResultContract<T, T?>() {
-    private var permission: T? = null
+class LaunchAppSettingContract : ActivityResultContract<Array<String>, Array<String>?>() {
+    private var permission: Array<String>? = null
 
-    override fun createIntent(context: Context, input: T?): Intent {
+    override fun createIntent(context: Context, input: Array<String>): Intent {
         permission = input
         return Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             .setData(Uri.fromParts("package", context.packageName, null))
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): T? {
+    override fun parseResult(resultCode: Int, intent: Intent?): Array<String>? {
         return permission
     }
 }
