@@ -13,9 +13,9 @@ import com.hyj.lib.permission.showPermissionDialog
 fun ActivityResultCaller.registerForGpsResult(
     callBack: GPSResultLauncher.() -> Unit
 ): GPSResultLauncher {
-    val mGpsCallback = GPSResultLauncher(this)
-    mGpsCallback.callBack()
-    return mGpsCallback
+    val gpsLauncher = GPSResultLauncher(this)
+    gpsLauncher.callBack()
+    return gpsLauncher
 }
 
 /**
@@ -84,7 +84,6 @@ class GPSResultLauncher(launcherCaller: ActivityResultCaller) {
             return true
         }
 
-        // 此处还需要测试看是选择哪种模式，需要根据不同系统来校验
         val locationManager =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)

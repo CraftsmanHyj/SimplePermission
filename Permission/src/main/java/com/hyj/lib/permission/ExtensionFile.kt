@@ -2,6 +2,8 @@ package com.hyj.lib.permission
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
 import androidx.fragment.app.Fragment
@@ -36,3 +38,15 @@ internal fun Context.showPermissionDialog(
     setNegativeButton(navigationText) { _, _ -> cancel() }
     setPositiveButton(positiveText) { _, _ -> confirm() }
 }.create().show()
+
+/**
+ * 判断这个意图的 Activity 是否存在
+ * @return true:存在；false：不存在。
+ */
+internal fun Intent?.exist(context: Context): Boolean {
+    return this?.let {
+        context.packageManager.queryIntentActivities(
+            it, PackageManager.MATCH_DEFAULT_ONLY
+        ).isNotEmpty()
+    } ?: false
+}

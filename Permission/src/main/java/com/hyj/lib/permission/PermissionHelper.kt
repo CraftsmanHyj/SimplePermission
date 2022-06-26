@@ -1,5 +1,6 @@
 package com.hyj.lib.permission
 
+import android.content.ContextWrapper
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,9 +19,9 @@ import androidx.core.app.ActivityCompat
  * @param callBack 权限处理回调接口
  */
 fun ActivityResultCaller.registerForPermissionResult(
-    callBack: IPermissionCallbackImpl.() -> Unit
+    callBack: PermissionCallback.() -> Unit
 ): ActivityResultLauncher<Array<String>> {
-    val permCallback = IPermissionCallbackImpl(this)
+    val permCallback = PermissionCallback(this)
     permCallback.callBack()
 
     return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
@@ -47,6 +48,40 @@ fun ActivityResultCaller.registerForPermissionResult(
 /**
  * 发起动态权限请求
  */
-fun ActivityResultLauncher<Array<String>>.launchP(vararg permissions: String) {
-    this.launch(permissions as Array<String>)
+fun ActivityResultLauncher<Array<String>>.launchP(
+    context: ContextWrapper,
+    vararg permissions: String
+) {
+    try {
+        if (permissions.isEmpty()) {
+            context.startActivity(PermissionPageIntent.getApplicationDetailsIntent(context))
+            return
+        }
+
+        var aPermission = permissions as Array<String>
+        // 必须要传入正常的权限或者权限组才能申请权限
+        PermissionChecker.checkPermissionArgument(aPermission)
+        // 检查申请的存储权限是否符合规范
+        PermissionChecker.checkStoragePermission(context, aPermission)
+        // 检查申请的定位权限是否符合规范
+        PermissionChecker.checkLocationPermission(context, aPermission)
+        // 检查申请的权限和 targetSdk 版本是否能吻合
+        PermissionChecker.checkTargetSdkVersion(context, permissions)
+        // 检测权限有没有在清单文件中注册
+        PermissionChecker.checkManifestPermissions(context, aPermission)
+        // 优化所申请的权限列表
+        aPermission = PermissionChecker.optimizeDeprecatedPermission(aPermission)
+
+//        if (PermissionApi.isGrantedPermissions(context, aPermission)) {
+        // 证明这些权限已经全部授予过，直接回调成功
+//            if (callback != null) {
+//                mInterceptor.grantedPermissions(activity, permissions, permissions, true, callback)
+//            }
+//            return
+//        }
+
+        launch(aPermission)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }

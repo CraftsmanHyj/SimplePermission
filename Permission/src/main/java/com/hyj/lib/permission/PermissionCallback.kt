@@ -4,7 +4,10 @@ import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultCaller
 import androidx.core.content.ContextCompat
 
-class IPermissionCallbackImpl(private val launcherCaller: ActivityResultCaller) {
+/**
+ * 权限回调接口
+ */
+class PermissionCallback(private val launcherCaller: ActivityResultCaller) {
     private var onGranted: (() -> Unit)? = null
     private var onDenied: (() -> Unit)? = null
     private var onPermanentlyDenied: (() -> Unit)? = null
@@ -16,9 +19,8 @@ class IPermissionCallbackImpl(private val launcherCaller: ActivityResultCaller) 
     private val appSetLauncher =
         launcherCaller.registerForActivityResult(LaunchAppSettingContract()) { permissions ->
             val denied = permissions?.find {
-                PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                    launcherCaller.context(), it
-                )
+                PackageManager.PERMISSION_GRANTED !=
+                        ContextCompat.checkSelfPermission(launcherCaller.context(), it)
             }
 
             if (!denied.isNullOrBlank()) {

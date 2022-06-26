@@ -2,8 +2,6 @@ package com.hyj.lib.permission
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
 
 /**
@@ -13,15 +11,12 @@ import androidx.activity.result.contract.ActivityResultContract
  * Date: 2022/6/10 16:45
  */
 class LaunchAppSettingContract : ActivityResultContract<Array<String>, Array<String>?>() {
-    private var permission: Array<String>? = null
+    private var requestPerms: Array<String>? = null
 
     override fun createIntent(context: Context, input: Array<String>): Intent {
-        permission = input
-        return Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            .setData(Uri.fromParts("package", context.packageName, null))
+        requestPerms = input
+        return PermissionPageIntent.getSmartPermissionIntent(context, input)
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Array<String>? {
-        return permission
-    }
+    override fun parseResult(resultCode: Int, intent: Intent?): Array<String>? = requestPerms
 }
