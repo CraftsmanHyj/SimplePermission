@@ -25,8 +25,7 @@ internal object PermissionApi {
         return if (AndroidVersion.isAndroid11) {
             Environment.isExternalStorageManager()
         } else isGrantedPermissions(
-            context,
-            Permission.Group.STORAGE
+            context, Permission.Group.STORAGE
         )
     }
 
@@ -83,8 +82,7 @@ internal object PermissionApi {
         if (AndroidVersion.isAndroid5) {
             val appOps: AppOpsManager =
                 context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-            val mode: Int
-            mode = if (AndroidVersion.isAndroid10) {
+            val mode = if (AndroidVersion.isAndroid10) {
                 appOps.unsafeCheckOpNoThrow(
                     AppOpsManager.OPSTR_GET_USAGE_STATS,
                     context.applicationInfo.uid, context.packageName
@@ -116,7 +114,7 @@ internal object PermissionApi {
     fun isGrantedNotDisturbPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid6) {
             context.getSystemService(NotificationManager::class.java)
-                .isNotificationPolicyAccessGranted()
+                .isNotificationPolicyAccessGranted
         } else true
     }
 
@@ -164,11 +162,13 @@ internal object PermissionApi {
         if (permissions.isEmpty()) {
             return false
         }
+
         for (permission in permissions) {
             if (!isGrantedPermission(context, permission)) {
                 return false
             }
         }
+
         return true
     }
 

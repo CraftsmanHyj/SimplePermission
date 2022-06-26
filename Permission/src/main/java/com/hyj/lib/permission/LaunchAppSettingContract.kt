@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContract
  * User: hyj
  * Date: 2022/6/10 16:45
  */
-class LaunchAppSettingContract : ActivityResultContract<Array<String>, Array<String>?>() {
+class LaunchAppSettingContract : ActivityResultContract<Array<String>, Array<String>>() {
     private var requestPerms: Array<String>? = null
 
     override fun createIntent(context: Context, input: Array<String>): Intent {

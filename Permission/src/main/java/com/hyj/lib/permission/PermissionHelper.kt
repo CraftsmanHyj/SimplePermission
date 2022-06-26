@@ -25,23 +25,36 @@ fun ActivityResultCaller.registerForPermissionResult(
     permCallback.callBack()
 
     return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
-        if (!resultMap.containsValue(false)) {
-            permCallback.granted()
-            return@registerForActivityResult
-        }
+//        if (!resultMap.containsValue(false)) {
+//            permCallback.granted()
+//            return@registerForActivityResult
+//        }
 
         // 获得未授权权限列表、第一次拒绝列表
-        val aDenied = resultMap.filter { !it.value }.keys.toTypedArray()
+//        var aDenied = resultMap.filter { !it.value }.keys.toTypedArray()
+//        aDenied = resultMap.keys.toTypedArray()
+//
+//        //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
+//        val permanentlyDenied =
+//            aDenied.find { !ActivityCompat.shouldShowRequestPermissionRationale(context(), it) }
 
-        //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
-        val permanentlyDenied =
-            aDenied.find { !ActivityCompat.shouldShowRequestPermissionRationale(context(), it) }
-
-        if (permanentlyDenied.isNullOrBlank()) {
-            permCallback.denied()
-        } else {
-            permCallback.permanentlyDenied(aDenied)
+        //resultMap中返回的授权结果不准确，需要自己重新判断，
+        //比如：android.permission.ACCESS_NOTIFICATION_POLICY，未授权也会返回true
+        val lDenied = mutableListOf<String>()//拒绝权限
+        val lPermanentlyDenied = mutableListOf<String>()//不在询问权限
+        for (item in resultMap) {
+            if (!PermissionApi.isGrantedPermission(context(), item.key)) {
+                lDenied.add(item.key)
+                //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(context(), item.key)) {
+                    lPermanentlyDenied.add(item.key)
+                }
+            }
         }
+
+        if (lDenied.isEmpty()) permCallback.granted()
+        else if (lPermanentlyDenied.isNotEmpty()) permCallback.permanentlyDenied(lPermanentlyDenied.toTypedArray())
+        else permCallback.denied()
     }
 }
 

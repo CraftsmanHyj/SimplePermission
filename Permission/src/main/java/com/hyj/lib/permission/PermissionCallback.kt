@@ -18,15 +18,22 @@ class PermissionCallback(private val launcherCaller: ActivityResultCaller) {
     //跳转到应用详情设置权限
     private val appSetLauncher =
         launcherCaller.registerForActivityResult(LaunchAppSettingContract()) { permissions ->
-            val denied = permissions?.find {
-                PackageManager.PERMISSION_GRANTED !=
-                        ContextCompat.checkSelfPermission(launcherCaller.context(), it)
-            }
+//            val denied = permissions?.find {
+//                PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+//                    launcherCaller.context(), it
+//                )
+//            }
 
-            if (!denied.isNullOrBlank()) {
-                denied()
-            } else {
+//            if (!denied.isNullOrBlank()) {
+//                denied()
+//            } else {
+//                granted()
+//            }
+
+            if (PermissionApi.isGrantedPermissions(launcherCaller.context(), permissions)) {
                 granted()
+            } else {
+                denied()
             }
         }
 

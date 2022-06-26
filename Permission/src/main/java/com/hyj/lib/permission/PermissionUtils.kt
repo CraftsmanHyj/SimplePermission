@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -15,8 +14,11 @@ import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
 import android.view.Surface
+import com.hyj.lib.permission.AndroidVersion.isAndroid10
 import com.hyj.lib.permission.AndroidVersion.isAndroid11
+import com.hyj.lib.permission.AndroidVersion.isAndroid12
 import com.hyj.lib.permission.AndroidVersion.isAndroid8
+import com.hyj.lib.permission.AndroidVersion.isAndroid9
 import org.xmlpull.v1.XmlPullParserException
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
@@ -132,54 +134,54 @@ internal object PermissionUtils {
     /**
      * 优化权限回调结果
      */
-//    fun optimizePermissionResults(
-//        activity: Activity?,
-//        permissions: Array<String>,
-//        grantResults: IntArray
-//    ) {
-//        for (i in permissions.indices) {
-//            var recheck = false
-//            val permission = permissions[i]
-//
-//            // 如果这个权限是特殊权限，那么就重新进行权限检测
-//            if (PermissionApi.isSpecialPermission(permission)) {
-//                recheck = true
-//            }
-//
-//            // 重新检查 Android 12 的三个新权限
-//            if (!isAndroid12 &&
-//                (Permission.BLUETOOTH_SCAN == permission || Permission.BLUETOOTH_CONNECT == permission || Permission.BLUETOOTH_ADVERTISE == permission)
-//            ) {
-//                recheck = true
-//            }
-//
-//            // 重新检查 Android 10.0 的三个新权限
-//            if (!isAndroid10 &&
-//                (Permission.ACCESS_BACKGROUND_LOCATION == permission || Permission.ACTIVITY_RECOGNITION == permission || Permission.ACCESS_MEDIA_LOCATION == permission)
-//            ) {
-//                recheck = true
-//            }
-//
-//            // 重新检查 Android 9.0 的一个新权限
-//            if (!isAndroid9 && Permission.ACCEPT_HANDOVER == permission) {
-//                recheck = true
-//            }
-//
-//            // 重新检查 Android 8.0 的两个新权限
-//            if (!isAndroid8 &&
-//                (Permission.ANSWER_PHONE_CALLS == permission || Permission.READ_PHONE_NUMBERS == permission)
-//            ) {
-//                recheck = true
-//            }
-//            if (recheck) {
-//                grantResults[i] = if (PermissionApi.isGrantedPermission(
-//                        activity,
-//                        permission
-//                    )
-//                ) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
-//            }
-//        }
-//    }
+    fun optimizePermissionResults(
+        activity: Activity,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
+        for (i in permissions.indices) {
+            var recheck = false
+            val permission = permissions[i]
+
+            // 如果这个权限是特殊权限，那么就重新进行权限检测
+            if (PermissionApi.isSpecialPermission(permission)) {
+                recheck = true
+            }
+
+            // 重新检查 Android 12 的三个新权限
+            if (!isAndroid12 &&
+                (Permission.BLUETOOTH_SCAN == permission || Permission.BLUETOOTH_CONNECT == permission || Permission.BLUETOOTH_ADVERTISE == permission)
+            ) {
+                recheck = true
+            }
+
+            // 重新检查 Android 10.0 的三个新权限
+            if (!isAndroid10 &&
+                (Permission.ACCESS_BACKGROUND_LOCATION == permission || Permission.ACTIVITY_RECOGNITION == permission || Permission.ACCESS_MEDIA_LOCATION == permission)
+            ) {
+                recheck = true
+            }
+
+            // 重新检查 Android 9.0 的一个新权限
+            if (!isAndroid9 && Permission.ACCEPT_HANDOVER == permission) {
+                recheck = true
+            }
+
+            // 重新检查 Android 8.0 的两个新权限
+            if (!isAndroid8 &&
+                (Permission.ANSWER_PHONE_CALLS == permission || Permission.READ_PHONE_NUMBERS == permission)
+            ) {
+                recheck = true
+            }
+            if (recheck) {
+                grantResults[i] = if (PermissionApi.isGrantedPermission(
+                        activity,
+                        permission
+                    )
+                ) PackageManager.PERMISSION_GRANTED else PackageManager.PERMISSION_DENIED
+            }
+        }
+    }
 
     /**
      * 将数组转换成 ArrayList
