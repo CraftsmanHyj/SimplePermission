@@ -78,8 +78,7 @@ class MainActivity : AppCompatActivity() {
         btnNotification.setOnClickListener {
             //Permission.NOTIFICATION_SERVICE
             singlePermissionLauncher.launchP(
-                this@MainActivity,
-                "android.permission.NOTIFICATION_SERVICE"
+                this@MainActivity, "android.permission.NOTIFICATION_SERVICE"
             )
         }
         btnNotificationListener.setOnClickListener {
@@ -91,11 +90,9 @@ class MainActivity : AppCompatActivity() {
         btnAlarm.setOnClickListener {
             singlePermissionLauncher.launchP(this@MainActivity, SCHEDULE_EXACT_ALARM)
         }
-        //TODO 不一样，需要处理
         btnNotDisturb.setOnClickListener {
             singlePermissionLauncher.launchP(this@MainActivity, ACCESS_NOTIFICATION_POLICY)
         }
-        //TODO 不一样，需要处理
         btnIgnoreBattery.setOnClickListener {
             singlePermissionLauncher.launchP(
                 this@MainActivity, REQUEST_IGNORE_BATTERY_OPTIMIZATIONS

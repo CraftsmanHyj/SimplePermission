@@ -21,18 +21,16 @@ internal object PermissionApi {
     /**
      * 是否有存储权限
      */
-    fun isGrantedStoragePermission(context: Context): Boolean {
+    private fun isGrantedStoragePermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid11) {
             Environment.isExternalStorageManager()
-        } else isGrantedPermissions(
-            context, Permission.Group.STORAGE
-        )
+        } else isGrantedPermissions(context, Permission.Group.STORAGE)
     }
 
     /**
      * 是否有安装权限
      */
-    fun isGrantedInstallPermission(context: Context): Boolean {
+    private fun isGrantedInstallPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid8) {
             context.packageManager.canRequestPackageInstalls()
         } else true
@@ -41,7 +39,7 @@ internal object PermissionApi {
     /**
      * 是否有悬浮窗权限
      */
-    fun isGrantedWindowPermission(context: Context): Boolean {
+    private fun isGrantedWindowPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid6) {
             Settings.canDrawOverlays(context)
         } else true
@@ -50,7 +48,7 @@ internal object PermissionApi {
     /**
      * 是否有系统设置权限
      */
-    fun isGrantedSettingPermission(context: Context): Boolean {
+    private fun isGrantedSettingPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid6) {
             Settings.System.canWrite(context)
         } else true
@@ -59,14 +57,14 @@ internal object PermissionApi {
     /**
      * 是否有通知栏权限
      */
-    fun isGrantedNotifyPermission(context: Context): Boolean {
+    private fun isGrantedNotifyPermission(context: Context): Boolean {
         return NotificationManagerCompat.from(context).areNotificationsEnabled()
     }
 
     /**
      * 是否通知栏监听的权限
      */
-    fun isGrantedNotificationListenerPermission(context: Context): Boolean {
+    private fun isGrantedNotificationListenerPermission(context: Context): Boolean {
         if (AndroidVersion.isAndroid4_3) {
             val packageNames: Set<String> =
                 NotificationManagerCompat.getEnabledListenerPackages(context)
@@ -78,7 +76,7 @@ internal object PermissionApi {
     /**
      * 是否有使用统计权限
      */
-    fun isGrantedPackagePermission(context: Context): Boolean {
+    private fun isGrantedPackagePermission(context: Context): Boolean {
         if (AndroidVersion.isAndroid5) {
             val appOps: AppOpsManager =
                 context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
@@ -101,27 +99,25 @@ internal object PermissionApi {
     /**
      * 是否有闹钟权限
      */
-    fun isGrantedAlarmPermission(context: Context): Boolean {
+    private fun isGrantedAlarmPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid12) {
-            context.getSystemService(AlarmManager::class.java)
-                .canScheduleExactAlarms()
+            context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
         } else true
     }
 
     /**
      * 是否有勿扰模式权限
      */
-    fun isGrantedNotDisturbPermission(context: Context): Boolean {
+    private fun isGrantedNotDisturbPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid6) {
-            context.getSystemService(NotificationManager::class.java)
-                .isNotificationPolicyAccessGranted
+            context.getSystemService(NotificationManager::class.java).isNotificationPolicyAccessGranted
         } else true
     }
 
     /**
      * 是否忽略电池优化选项
      */
-    fun isGrantedIgnoreBatteryPermission(context: Context): Boolean {
+    private fun isGrantedIgnoreBatteryPermission(context: Context): Boolean {
         return if (AndroidVersion.isAndroid6) {
             context.getSystemService(PowerManager::class.java)
                 .isIgnoringBatteryOptimizations(context.packageName)
@@ -176,7 +172,7 @@ internal object PermissionApi {
      * 获取已经授予的权限
      */
     fun getGrantedPermissions(context: Context, permissions: List<String>): List<String> {
-        val grantedPermission: MutableList<String> = ArrayList(permissions.size)
+        val grantedPermission = mutableListOf<String>()
         for (permission in permissions) {
             if (isGrantedPermission(context, permission)) {
                 grantedPermission.add(permission)
@@ -260,9 +256,9 @@ internal object PermissionApi {
         // 检测 Android 12 的三个新权限
         if (!AndroidVersion.isAndroid12) {
             if (Permission.BLUETOOTH_SCAN == permission) {
-                return context.checkSelfPermission(Permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED
+                return context.checkSelfPermission(Permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
             }
+
             if (Permission.BLUETOOTH_CONNECT == permission || Permission.BLUETOOTH_ADVERTISE == permission) {
                 return true
             }
@@ -271,13 +267,12 @@ internal object PermissionApi {
         // 检测 Android 10 的三个新权限
         if (!AndroidVersion.isAndroid10) {
             if (Permission.ACCESS_BACKGROUND_LOCATION == permission) {
-                return context.checkSelfPermission(Permission.ACCESS_FINE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED
+                return context.checkSelfPermission(Permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
             }
             if (Permission.ACTIVITY_RECOGNITION == permission) {
-                return context.checkSelfPermission(Permission.BODY_SENSORS) ==
-                        PackageManager.PERMISSION_GRANTED
+                return context.checkSelfPermission(Permission.BODY_SENSORS) == PackageManager.PERMISSION_GRANTED
             }
+
             if (Permission.ACCESS_MEDIA_LOCATION == permission) {
                 return true
             }
@@ -296,10 +291,10 @@ internal object PermissionApi {
                 return true
             }
             if (Permission.READ_PHONE_NUMBERS == permission) {
-                return context.checkSelfPermission(Permission.READ_PHONE_STATE) ==
-                        PackageManager.PERMISSION_GRANTED
+                return context.checkSelfPermission(Permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED
             }
         }
+
         return context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -324,7 +319,7 @@ internal object PermissionApi {
      * @param activity              Activity对象
      * @param permission            请求的权限
      */
-    fun isPermissionPermanentDenied(activity: Activity, permission: String): Boolean {
+    private fun isPermissionPermanentDenied(activity: Activity, permission: String): Boolean {
         // 特殊权限不算，本身申请方式和危险权限申请方式不同，因为没有永久拒绝的选项，所以这里返回 false
         if (isSpecialPermission(permission)) {
             return false
@@ -343,8 +338,8 @@ internal object PermissionApi {
                 return false
             }
         }
-        if (AndroidVersion.isAndroid10) {
 
+        if (AndroidVersion.isAndroid10) {
             // 重新检测后台定位权限是否永久拒绝
             if (Permission.ACCESS_BACKGROUND_LOCATION == permission &&
                 !isGrantedPermission(activity, Permission.ACCESS_BACKGROUND_LOCATION) &&
@@ -386,25 +381,9 @@ internal object PermissionApi {
                         !activity.shouldShowRequestPermissionRationale(Permission.READ_PHONE_STATE)
             }
         }
+
         return !isGrantedPermission(activity, permission) &&
                 !activity.shouldShowRequestPermissionRationale(permission)
-    }
-
-    /**
-     * 获取没有授予的权限
-     *
-     * @param permissions           需要请求的权限组
-     * @param grantResults          允许结果组
-     */
-    fun getDeniedPermissions(permissions: List<String>, grantResults: IntArray): List<String> {
-        val deniedPermissions: MutableList<String> = ArrayList()
-        for (i in grantResults.indices) {
-            // 把没有授予过的权限加入到集合中
-            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                deniedPermissions.add(permissions[i])
-            }
-        }
-        return deniedPermissions
     }
 
     /**
@@ -414,7 +393,7 @@ internal object PermissionApi {
      * @param grantResults      允许结果组
      */
     fun getGrantedPermissions(permissions: List<String>, grantResults: IntArray): List<String> {
-        val grantedPermissions: MutableList<String> = ArrayList()
+        val grantedPermissions = mutableListOf<String>()
         for (i in grantResults.indices) {
             // 把授予过的权限加入到集合中
             if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
@@ -422,5 +401,22 @@ internal object PermissionApi {
             }
         }
         return grantedPermissions
+    }
+
+    /**
+     * 获取没有授予的权限
+     *
+     * @param permissions           需要请求的权限组
+     * @param grantResults          允许结果组
+     */
+    fun getDeniedPermissions(permissions: List<String>, grantResults: IntArray): List<String> {
+        val deniedPermissions = mutableListOf<String>()
+        for (i in grantResults.indices) {
+            // 把没有授予过的权限加入到集合中
+            if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                deniedPermissions.add(permissions[i])
+            }
+        }
+        return deniedPermissions
     }
 }

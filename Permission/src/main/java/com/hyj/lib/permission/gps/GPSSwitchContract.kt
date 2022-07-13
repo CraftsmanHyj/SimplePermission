@@ -10,7 +10,7 @@ import androidx.activity.result.contract.ActivityResultContract
  * User: hyj
  * Date: 2022/6/9 15:38
  */
-class GPSSwitchContract : ActivityResultContract<Unit, Unit>() {
+internal class GPSSwitchContract : ActivityResultContract<Unit, Unit>() {
     override fun createIntent(context: Context, input: Unit?): Intent {
         return Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
     }

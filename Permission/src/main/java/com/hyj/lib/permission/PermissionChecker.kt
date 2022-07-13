@@ -11,7 +11,7 @@ import java.io.IOException
  * User: hyj
  * Date: 2022/6/19 14:59
  */
-object PermissionChecker {
+internal object PermissionChecker {
     /**
      * 检查权限是否符合要求
      * 必须要传入正常的权限或者权限组才能申请权限

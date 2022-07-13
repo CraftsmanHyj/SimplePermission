@@ -1,8 +1,6 @@
 package com.hyj.lib.permission
 
-import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultCaller
-import androidx.core.content.ContextCompat
 
 /**
  * 权限回调接口
@@ -10,26 +8,14 @@ import androidx.core.content.ContextCompat
 class PermissionCallback(private val launcherCaller: ActivityResultCaller) {
     private var onGranted: (() -> Unit)? = null
     private var onDenied: (() -> Unit)? = null
-    private var onPermanentlyDenied: (() -> Unit)? = null
+    private var onPermanentlyDenied: ((Array<String>) -> Unit)? = null
 
     //“不再询问”后的弹窗提示
-    private var permanentlyDeniedTip: String = "应用需要此权限才可以运行，请在设置中授权！"
+    private var permanentlyDeniedTip: String = "应用需要此权限才可以运行，请在应用信息的权限管理中授权！"
 
     //跳转到应用详情设置权限
     private val appSetLauncher =
         launcherCaller.registerForActivityResult(LaunchAppSettingContract()) { permissions ->
-//            val denied = permissions?.find {
-//                PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-//                    launcherCaller.context(), it
-//                )
-//            }
-
-//            if (!denied.isNullOrBlank()) {
-//                denied()
-//            } else {
-//                granted()
-//            }
-
             if (PermissionApi.isGrantedPermissions(launcherCaller.context(), permissions)) {
                 granted()
             } else {
@@ -54,7 +40,7 @@ class PermissionCallback(private val launcherCaller: ActivityResultCaller) {
     /**
      * 权限拒绝，且勾选了不再询问时的回调
      */
-    fun onPermanentlyDenied(method: () -> Unit) {
+    fun onPermanentlyDenied(method: (Array<String>) -> Unit) {
         onPermanentlyDenied = method
     }
 
@@ -74,7 +60,7 @@ class PermissionCallback(private val launcherCaller: ActivityResultCaller) {
     }
 
     internal fun permanentlyDenied(deniedPermission: Array<String>) {
-        onPermanentlyDenied?.invoke() ?: showSetDialog(deniedPermission)
+        onPermanentlyDenied?.invoke(deniedPermission) ?: showSetDialog(deniedPermission)
     }
 
     private fun showSetDialog(deniedPermission: Array<String>) {

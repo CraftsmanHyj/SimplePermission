@@ -25,19 +25,6 @@ fun ActivityResultCaller.registerForPermissionResult(
     permCallback.callBack()
 
     return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
-//        if (!resultMap.containsValue(false)) {
-//            permCallback.granted()
-//            return@registerForActivityResult
-//        }
-
-        // 获得未授权权限列表、第一次拒绝列表
-//        var aDenied = resultMap.filter { !it.value }.keys.toTypedArray()
-//        aDenied = resultMap.keys.toTypedArray()
-//
-//        //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
-//        val permanentlyDenied =
-//            aDenied.find { !ActivityCompat.shouldShowRequestPermissionRationale(context(), it) }
-
         //resultMap中返回的授权结果不准确，需要自己重新判断，
         //比如：android.permission.ACCESS_NOTIFICATION_POLICY，未授权也会返回true
         val lDenied = mutableListOf<String>()//拒绝权限
@@ -84,14 +71,6 @@ fun ActivityResultLauncher<Array<String>>.launchP(
         PermissionChecker.checkManifestPermissions(context, aPermission)
         // 优化所申请的权限列表
         aPermission = PermissionChecker.optimizeDeprecatedPermission(aPermission)
-
-//        if (PermissionApi.isGrantedPermissions(context, aPermission)) {
-        // 证明这些权限已经全部授予过，直接回调成功
-//            if (callback != null) {
-//                mInterceptor.grantedPermissions(activity, permissions, permissions, true, callback)
-//            }
-//            return
-//        }
 
         launch(aPermission)
     } catch (e: Exception) {
