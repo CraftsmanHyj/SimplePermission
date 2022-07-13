@@ -10,8 +10,8 @@ android {
         applicationId "com.hyj.permission.demo"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -50,7 +50,7 @@ android {
         //确定输出文件名
         def today = new Date()
         def path = ((project.name != "app") ? project.name : rootProject.name.replace(" ", "")) + "_" +
-                variant.flavorName + "_" +
+                //variant.flavorName + "_" +
                 variant.buildType.name + "_" +
                 variant.versionName + "_" +
                 //today.format('yyyyMMddHHmm') +
