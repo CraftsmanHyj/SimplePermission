@@ -16,15 +16,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        releaseSign {    //正式签名
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-        }
-    }
-
+//    signingConfigs {
+//        releaseSign {    //正式签名
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_PASSWORD
+//            storeFile file(STORE_FILE)
+//            storePassword STORE_PASSWORD
+//        }
+//    }
 
     buildTypes {
         release {
@@ -34,7 +33,7 @@ android {
             minifyEnabled true  //编译时是否混淆
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            signingConfig signingConfigs.releaseSign     //签名信息
+//            signingConfig signingConfigs.releaseSign     //签名信息
         }
     }
 

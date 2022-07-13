@@ -73,3 +73,6 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
+
+
+优秀权限库：[XXPermissions](https://github.com/getActivity/XXPermissions)
