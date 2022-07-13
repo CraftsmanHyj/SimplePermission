@@ -13,22 +13,23 @@ import com.hyj.lib.permission.showPermissionDialog
 fun ActivityResultCaller.registerForGpsResult(
     callBack: GPSResultLauncher.() -> Unit
 ): GPSResultLauncher {
-    val mGpsCallback = GPSResultLauncher(this)
-    mGpsCallback.callBack() //触发回调
-    return mGpsCallback
+    val gpsLauncher = GPSResultLauncher(this)
+    gpsLauncher.callBack()
+    return gpsLauncher
 }
 
 /**
  * GPS开关检测
  */
-class GPSResultLauncher(private val launcherCaller: ActivityResultCaller) {
+class GPSResultLauncher(launcherCaller: ActivityResultCaller) {
     private var onGranted: (() -> Unit)? = null
     private var onDenied: (() -> Unit)? = null
 
+    private val context = launcherCaller.context()
     private var requestTip: CharSequence = "GPS高精位置服务未开启，请打开！"
     private val gpsLauncher =
         launcherCaller.registerForActivityResult(GPSSwitchContract()) {
-            if (launcherCaller.context().checkGpsStatus()) {
+            if (checkGpsStatus()) {
                 granted()
             } else {
                 denied()
@@ -63,10 +64,10 @@ class GPSResultLauncher(private val launcherCaller: ActivityResultCaller) {
      * 启动GPS检测
      */
     fun launch() {
-        if (launcherCaller.context().checkGpsStatus()) {
+        if (checkGpsStatus()) {
             granted()
         } else {
-            launcherCaller.context().showPermissionDialog(
+            context.showPermissionDialog(
                 message = requestTip,
                 cancel = { denied() },
                 confirm = { gpsLauncher.launch(null) }
@@ -74,14 +75,17 @@ class GPSResultLauncher(private val launcherCaller: ActivityResultCaller) {
         }
     }
 
-    private fun Context.checkGpsStatus(): Boolean {
+    /**
+     * 检查当前GPS是否打开
+     */
+    private fun checkGpsStatus(): Boolean {
         //9.0以下不需要打开GPS,9.0部分需要，10都需要
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O_MR1) {
             return true
         }
 
-        // 此处还需要测试看是选择哪种模式，需要根据不同系统来校验
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager =
+            context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 }

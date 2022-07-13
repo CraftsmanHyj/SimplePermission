@@ -10,21 +10,20 @@ android {
         applicationId "com.hyj.permission.demo"
         minSdk 21
         targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    signingConfigs {
-        releaseSign {    //正式签名
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PASSWORD
-            storeFile file(STORE_FILE)
-            storePassword STORE_PASSWORD
-        }
-    }
-
+//    signingConfigs {
+//        releaseSign {    //正式签名
+//            keyAlias KEY_ALIAS
+//            keyPassword KEY_PASSWORD
+//            storeFile file(STORE_FILE)
+//            storePassword STORE_PASSWORD
+//        }
+//    }
 
     buildTypes {
         release {
@@ -34,7 +33,7 @@ android {
             minifyEnabled true  //编译时是否混淆
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            signingConfig signingConfigs.releaseSign     //签名信息
+//            signingConfig signingConfigs.releaseSign     //签名信息
         }
     }
 
@@ -50,10 +49,10 @@ android {
         //确定输出文件名
         def today = new Date()
         def path = ((project.name != "app") ? project.name : rootProject.name.replace(" ", "")) + "_" +
-                variant.flavorName + "_" +
+                //variant.flavorName + "_" +
                 variant.buildType.name + "_" +
                 variant.versionName + "_" +
-                today.format('yyyyMMddHHmm') +
+                //today.format('yyyyMMddHHmm') +
                 ".apk"
 
         variant.outputs.forEach {
@@ -96,6 +95,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    implementation files("../docs/SimplePermission-V1.0.0.aar")
-//    implementation project(path: ':Permission')
+//    implementation files("../docs/SimplePermission-V1.0.0.aar")
+    implementation project(path: ':Permission')
 }

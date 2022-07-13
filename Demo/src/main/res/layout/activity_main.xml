@@ -13,21 +13,83 @@
         android:padding="8dp">
 
         <Button
+            android:id="@+id/btnCheckGPSStatus"
+            style="@style/btnType"
+            android:text="检查GPS是否打开" />
+
+        <Button
             android:id="@+id/btnSinglePermission"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="单权限(日历)" />
+            style="@style/btnType"
+            android:text="单权限(录音)" />
 
         <Button
             android:id="@+id/btnMultiPermission"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/btnType"
             android:text="多权限(相机、存储读写)" />
 
         <Button
-            android:id="@+id/btnCheckGPSStatus"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="检查GPS是否打开" />
+            android:id="@+id/btnLocationGroup"
+            style="@style/btnType"
+            android:text="申请定位权限组" />
+
+        <Button
+            android:id="@+id/btnBlueTooth"
+            style="@style/btnType"
+            android:text="申请蓝牙权限" />
+
+        <Button
+            android:id="@+id/btnNewStorage"
+            style="@style/btnType"
+            android:text="申请新版存储权限" />
+
+        <Button
+            android:id="@+id/btnInstall"
+            style="@style/btnType"
+            android:text="申请安装包权限" />
+
+        <Button
+            android:id="@+id/btnWindow"
+            style="@style/btnType"
+            android:text="申请悬浮窗权限" />
+
+        <Button
+            android:id="@+id/btnSetting"
+            style="@style/btnType"
+            android:text="申请系统设置权限" />
+
+        <Button
+            android:id="@+id/btnNotification"
+            style="@style/btnType"
+            android:text="申请通知栏权限" />
+
+        <Button
+            android:id="@+id/btnNotificationListener"
+            style="@style/btnType"
+            android:text="申请通知栏监听权限" />
+
+        <Button
+            android:id="@+id/btnPackage"
+            style="@style/btnType"
+            android:text="申请使用统计权限" />
+
+        <Button
+            android:id="@+id/btnAlarm"
+            style="@style/btnType"
+            android:text="申请闹钟提醒权限" />
+
+        <Button
+            android:id="@+id/btnNotDisturb"
+            style="@style/btnType"
+            android:text="申请勿扰权限" />
+
+        <Button
+            android:id="@+id/btnIgnoreBattery"
+            style="@style/btnType"
+            android:text="申请忽略电池优化权限" />
+
+        <Button
+            android:id="@+id/btnAppDetail"
+            style="@style/btnType"
+            android:text="跳转到应用详情页" />
     </LinearLayout>
 </ScrollView>

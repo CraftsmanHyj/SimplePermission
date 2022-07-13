@@ -2,10 +2,10 @@ package com.hyj.lib.permission
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCaller
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 /**
@@ -23,48 +23,30 @@ fun ActivityResultCaller.context() =
 /**
  * 应用授权弹窗提示
  */
-fun Context.showPermissionDialog(
+internal fun Context.showPermissionDialog(
     title: CharSequence = "权限申请",
-    message: CharSequence? = null,
+    message: CharSequence = "应用运行需要该权限，请授权！",
+    navigationText: CharSequence = "拒绝",
+    positiveText: CharSequence = "授权",
     cancel: (() -> Unit),
     confirm: (() -> Unit)
 ) = AlertDialog.Builder(this).apply {
     setTitle(title)
-    setMessage(if (message.isNullOrBlank()) "应用运行需要该权限，请授权！" else message)
+    setMessage(message)
 
     setOnCancelListener { cancel() }
-    setNegativeButton("拒绝") { _, _ -> cancel() }
-    setPositiveButton("授权") { _, _ -> confirm() }
+    setNegativeButton(navigationText) { _, _ -> cancel() }
+    setPositiveButton(positiveText) { _, _ -> confirm() }
 }.create().show()
 
 /**
- * 跳转应用设置页的Launcher
- * */
-fun <T> ActivityResultCaller.appSetLauncher(
-    callBack: IPermissionCallback<T>,
-    placeholder: T
-) = registerForActivityResult(LaunchAppSettingsContract<T?>()) { permissions ->
-    if (placeholder is String) {
-        val hasDenied = PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-            context(),
-            permissions as String
-        )
-
-        if (hasDenied) {
-            callBack.denied(permissions as T)
-        } else {
-            callBack.granted(permissions as T)
-        }
-    } else {
-        val perms = permissions as Array<String?>?
-        val denied = perms?.find {
-            PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(context(), it!!)
-        }
-
-        if (!denied.isNullOrBlank()) {
-            callBack.denied(permissions as T)
-        } else {
-            callBack.granted(permissions as T)
-        }
-    }
+ * 判断这个意图的 Activity 是否存在
+ * @return true:存在；false：不存在。
+ */
+internal fun Intent?.exist(context: Context): Boolean {
+    return this?.let {
+        context.packageManager.queryIntentActivities(
+            it, PackageManager.MATCH_DEFAULT_ONLY
+        ).isNotEmpty()
+    } ?: false
 }
