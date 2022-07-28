@@ -7,7 +7,7 @@
 
 
 
-[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )；　　[动态权限列表](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E.md)；　　[下载Demo体验效果](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/Demo_release_2.1_.apk)
+[更新日志]( https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/UpdateLog.md )；　　[动态权限列表](https://github.com/CraftsmanHyj/SimplePermission/blob/master/docs/%E6%9D%83%E9%99%90%E8%AF%B4%E6%98%8E.md)；　　[下载Demo体验效果](https://github.com/CraftsmanHyj/SimplePermission/tree/master/docs)；
 
 # 添加依赖
 
