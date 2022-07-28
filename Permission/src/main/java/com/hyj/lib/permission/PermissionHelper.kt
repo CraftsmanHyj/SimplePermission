@@ -4,7 +4,6 @@ import android.content.ContextWrapper
 import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 
 /**
  * 关于授权后，又关闭权限，导致应用重启的问题
@@ -27,21 +26,31 @@ fun ActivityResultCaller.registerForPermissionResult(
     return registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { resultMap ->
         //resultMap中返回的授权结果不准确，需要自己重新判断，
         //比如：android.permission.ACCESS_NOTIFICATION_POLICY，未授权也会返回true
-        val lDenied = mutableListOf<String>()//拒绝权限
-        val lPermanentlyDenied = mutableListOf<String>()//不在询问权限
-        for (item in resultMap) {
-            if (!PermissionApi.isGrantedPermission(context(), item.key)) {
-                lDenied.add(item.key)
-                //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(context(), item.key)) {
-                    lPermanentlyDenied.add(item.key)
-                }
-            }
-        }
+//        val lDenied = mutableListOf<String>()//拒绝权限
+//        val lPermanentlyDenied = mutableListOf<String>()//不在询问权限
+//        for (item in resultMap) {
+//            if (!PermissionApi.isGrantedPermission(context(), item.key)) {
+//                //查找权限勾选了不再询问，那么所有拒绝的权限都跳转到设置界面去授权
+//                if (PermissionApi.isSpecialPermission(item.key)
+//                    || !ActivityCompat.shouldShowRequestPermissionRationale(context(), item.key)
+//                ) {
+//                    lPermanentlyDenied.add(item.key)
+//                } else {
+//                    lDenied.add(item.key)
+//                }
+//            }
+//        }
 
-        if (lDenied.isEmpty()) permCallback.granted()
-        else if (lPermanentlyDenied.isNotEmpty()) permCallback.permanentlyDenied(lPermanentlyDenied.toTypedArray())
-        else permCallback.denied()
+        val lPermission = resultMap.keys.toList()
+        val lPermanentlyDenied = PermissionApi.getPermissionPermanentDenied(context(), lPermission)
+        val lDenied = PermissionApi.getDeniedPermissions(context(), lPermission)
+
+        if (lPermanentlyDenied.isNotEmpty())
+            permCallback.permanentlyDenied(lPermanentlyDenied.toTypedArray())
+        else if (lDenied.isNotEmpty())
+            permCallback.denied()
+        else
+            permCallback.granted()
     }
 }
 

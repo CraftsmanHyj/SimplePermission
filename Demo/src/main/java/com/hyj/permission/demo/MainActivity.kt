@@ -1,8 +1,10 @@
 package com.hyj.permission.demo
 
 import android.Manifest.permission.*
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import com.hyj.lib.permission.gps.registerForGpsResult
 import com.hyj.lib.permission.launchP
@@ -92,6 +94,9 @@ class MainActivity : AppCompatActivity() {
         }
         btnNotDisturb.setOnClickListener {
             singlePermissionLauncher.launchP(this@MainActivity, ACCESS_NOTIFICATION_POLICY)
+        }
+        btnNotDisturbSet.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
         }
         btnIgnoreBattery.setOnClickListener {
             singlePermissionLauncher.launchP(

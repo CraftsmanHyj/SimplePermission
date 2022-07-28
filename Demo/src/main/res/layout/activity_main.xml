@@ -83,6 +83,11 @@
             android:text="申请勿扰权限" />
 
         <Button
+            android:id="@+id/btnNotDisturbSet"
+            style="@style/btnType"
+            android:text="申请勿扰权限(设置)" />
+
+        <Button
             android:id="@+id/btnIgnoreBattery"
             style="@style/btnType"
             android:text="申请忽略电池优化权限" />

@@ -314,6 +314,21 @@ internal object PermissionApi {
     }
 
     /**
+     * 在权限组中检查是否有某个权限是否被永久拒绝
+     * @param activity              Activity对象
+     * @param permissions            请求的权限
+     */
+    fun getPermissionPermanentDenied(activity: Activity, permissions: List<String>): List<String> {
+        val lPermanentlyDenied = mutableListOf<String>()
+        for (permission in permissions) {
+            if (isPermissionPermanentDenied(activity, permission)) {
+                lPermanentlyDenied.add(permission)
+            }
+        }
+        return lPermanentlyDenied
+    }
+
+    /**
      * 判断某个权限是否被永久拒绝
      *
      * @param activity              Activity对象
@@ -321,22 +336,18 @@ internal object PermissionApi {
      */
     private fun isPermissionPermanentDenied(activity: Activity, permission: String): Boolean {
         // 特殊权限不算，本身申请方式和危险权限申请方式不同，因为没有永久拒绝的选项，所以这里返回 false
-        if (isSpecialPermission(permission)) {
-            return false
-        }
-        if (!AndroidVersion.isAndroid6) {
-            return false
-        }
+        if (isSpecialPermission(permission)) return !isGrantedPermission(activity, permission)
+
+        if (!AndroidVersion.isAndroid6) return false
 
         // 检测 Android 12 的三个新权限
         if (!AndroidVersion.isAndroid12) {
-            if (Permission.BLUETOOTH_SCAN == permission) {
+            if (Permission.BLUETOOTH_SCAN == permission)
                 return !isGrantedPermission(activity, Permission.ACCESS_COARSE_LOCATION) &&
                         !activity.shouldShowRequestPermissionRationale(Permission.ACCESS_COARSE_LOCATION)
-            }
-            if (Permission.BLUETOOTH_CONNECT == permission || Permission.BLUETOOTH_ADVERTISE == permission) {
+
+            if (Permission.BLUETOOTH_CONNECT == permission || Permission.BLUETOOTH_ADVERTISE == permission)
                 return false
-            }
         }
 
         if (AndroidVersion.isAndroid10) {
@@ -344,42 +355,34 @@ internal object PermissionApi {
             if (Permission.ACCESS_BACKGROUND_LOCATION == permission &&
                 !isGrantedPermission(activity, Permission.ACCESS_BACKGROUND_LOCATION) &&
                 !isGrantedPermission(activity, Permission.ACCESS_FINE_LOCATION)
-            ) {
-                return !activity.shouldShowRequestPermissionRationale(Permission.ACCESS_FINE_LOCATION)
-            }
+            ) return !activity.shouldShowRequestPermissionRationale(Permission.ACCESS_FINE_LOCATION)
         }
 
         // 检测 Android 10 的三个新权限
         if (!AndroidVersion.isAndroid10) {
-            if (Permission.ACCESS_BACKGROUND_LOCATION == permission) {
+            if (Permission.ACCESS_BACKGROUND_LOCATION == permission)
                 return !isGrantedPermission(activity, Permission.ACCESS_FINE_LOCATION) &&
                         !activity.shouldShowRequestPermissionRationale(Permission.ACCESS_FINE_LOCATION)
-            }
-            if (Permission.ACTIVITY_RECOGNITION == permission) {
+
+            if (Permission.ACTIVITY_RECOGNITION == permission)
                 return !isGrantedPermission(activity, Permission.BODY_SENSORS) &&
                         !activity.shouldShowRequestPermissionRationale(Permission.BODY_SENSORS)
-            }
-            if (Permission.ACCESS_MEDIA_LOCATION == permission) {
-                return false
-            }
+
+            if (Permission.ACCESS_MEDIA_LOCATION == permission) return false
         }
 
         // 检测 Android 9.0 的一个新权限
         if (!AndroidVersion.isAndroid9) {
-            if (Permission.ACCEPT_HANDOVER == permission) {
-                return false
-            }
+            if (Permission.ACCEPT_HANDOVER == permission) return false
         }
 
         // 检测 Android 8.0 的两个新权限
         if (!AndroidVersion.isAndroid8) {
-            if (Permission.ANSWER_PHONE_CALLS == permission) {
-                return false
-            }
-            if (Permission.READ_PHONE_NUMBERS == permission) {
+            if (Permission.ANSWER_PHONE_CALLS == permission) return false
+
+            if (Permission.READ_PHONE_NUMBERS == permission)
                 return !isGrantedPermission(activity, Permission.READ_PHONE_STATE) &&
                         !activity.shouldShowRequestPermissionRationale(Permission.READ_PHONE_STATE)
-            }
         }
 
         return !isGrantedPermission(activity, permission) &&
