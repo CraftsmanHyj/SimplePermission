@@ -84,6 +84,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
         btnNotificationListener.setOnClickListener {
+            //Tips:此功能要在manifest中注册service进行监听
             singlePermissionLauncher.launchP(this@MainActivity, BIND_NOTIFICATION_LISTENER_SERVICE)
         }
         btnPackage.setOnClickListener {
